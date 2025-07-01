@@ -66,9 +66,10 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedAuthor, setSelectedAuthor] = useState('');
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
+  const [posts, setPosts] = useState(mockPosts);
 
   // Filter posts based on selected category and author
-  const filteredPosts = mockPosts.filter(post => {
+  const filteredPosts = posts.filter(post => {
     const categoryMatch = selectedCategory === 'all' || post.category === selectedCategory;
     const authorMatch = !selectedAuthor || post.author === selectedAuthor;
     return categoryMatch && authorMatch;
@@ -76,6 +77,10 @@ const Index = () => {
 
   const handlePostClick = (post: any) => {
     // Navigation is handled in PostCard component
+  };
+
+  const handleSavePost = (newPost: any) => {
+    setPosts(prev => [newPost, ...prev]);
   };
 
   return (
@@ -117,6 +122,7 @@ const Index = () => {
       <CreatePostModal 
         isOpen={isCreatePostModalOpen}
         onClose={() => setIsCreatePostModalOpen(false)}
+        onSave={handleSavePost}
       />
     </div>
   );
