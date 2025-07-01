@@ -12,6 +12,7 @@ interface HeaderProps {
 const Header = ({ onCreatePost }: HeaderProps) => {
   const location = useLocation();
   const isTeamBlogPage = location.pathname === '/team-blog' || location.pathname.startsWith('/team/');
+  const isLandingPage = location.pathname === '/';
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -31,7 +32,9 @@ const Header = ({ onCreatePost }: HeaderProps) => {
               <Link to="/">
                 <h1 className="text-2xl font-bold text-blue-600">TeamBlog</h1>
               </Link>
-              <span className="ml-2 text-sm text-gray-500">스마트 시티 플랫폼 팀</span>
+              {!isLandingPage && (
+                <span className="ml-2 text-sm text-gray-500">스마트 시티 플랫폼 팀</span>
+              )}
             </div>
           </div>
 
@@ -49,21 +52,44 @@ const Header = ({ onCreatePost }: HeaderProps) => {
 
           {/* Actions */}
           <div className="flex items-center space-x-4">
-            <Button
-              onClick={onCreatePost}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-            >
-              <Plus className="h-4 w-4" />
-              글쓰기
-            </Button>
-            
-            <Button variant="ghost" size="icon" className="hover:bg-gray-100">
-              <Settings className="h-5 w-5 text-gray-600" />
-            </Button>
-            
-            <Button variant="ghost" size="icon" className="hover:bg-gray-100">
-              <User className="h-5 w-5 text-gray-600" />
-            </Button>
+            {isLandingPage ? (
+              <>
+                <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
+                  <Link to="/create-team">
+                    <Plus className="h-4 w-4 mr-2" />
+                    팀 블로그 만들기
+                  </Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link to="/mypage">
+                    <User className="h-4 w-4 mr-2" />
+                    마이페이지
+                  </Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  onClick={onCreatePost}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                >
+                  <Plus className="h-4 w-4" />
+                  글쓰기
+                </Button>
+                
+                <Button variant="ghost" size="icon" className="hover:bg-gray-100" asChild>
+                  <Link to="/team/smart-city/manage">
+                    <Settings className="h-5 w-5 text-gray-600" />
+                  </Link>
+                </Button>
+                
+                <Button variant="ghost" size="icon" className="hover:bg-gray-100" asChild>
+                  <Link to="/mypage">
+                    <User className="h-5 w-5 text-gray-600" />
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>

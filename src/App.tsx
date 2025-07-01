@@ -7,6 +7,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Index from "./pages/Index";
 import PostDetail from "./pages/PostDetail";
+import CreateTeam from "./pages/CreateTeam";
+import TeamManagement from "./pages/TeamManagement";
+import MyPage from "./pages/MyPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +25,9 @@ const App = () => (
           <Route path="/team-blog" element={<Index />} />
           <Route path="/team/:teamId" element={<Index />} />
           <Route path="/post/:id" element={<PostDetail />} />
+          <Route path="/create-team" element={<CreateTeam />} />
+          <Route path="/team/:teamId/manage" element={<TeamManagement />} />
+          <Route path="/mypage" element={<MyPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

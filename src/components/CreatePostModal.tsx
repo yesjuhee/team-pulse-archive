@@ -27,7 +27,7 @@ const CreatePostModal = ({ isOpen, onClose, onSave }: CreatePostModalProps) => {
     const newPost = {
       id: Date.now().toString(),
       title,
-      content: postType === 'link' ? `외부 블로그 글: ${externalUrl}` : content,
+      content,
       author: '김민준',
       category,
       date: new Date().toLocaleDateString('ko-KR'),
@@ -129,23 +129,11 @@ const CreatePostModal = ({ isOpen, onClose, onSave }: CreatePostModalProps) => {
               </div>
             </div>
 
-            {/* Content or URL */}
-            {postType === 'content' ? (
+            {/* External URL (if applicable) */}
+            {postType === 'link' && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  내용 *
-                </label>
-                <Textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="프로젝트 경험, 기술적 지식, 문제 해결 과정 등을 자유롭게 작성해주세요..."
-                  className="min-h-[300px] resize-none"
-                />
-              </div>
-            ) : (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  외부 블로그 URL *
+                  외부 블로그 URL
                 </label>
                 <Input
                   value={externalUrl}
@@ -158,6 +146,27 @@ const CreatePostModal = ({ isOpen, onClose, onSave }: CreatePostModalProps) => {
                 </p>
               </div>
             )}
+
+            {/* Content */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                내용 *
+              </label>
+              <Textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder={postType === 'link' 
+                  ? "외부 글에 대한 설명이나 요약을 작성해주세요..." 
+                  : "프로젝트 경험, 기술적 지식, 문제 해결 과정 등을 자유롭게 작성해주세요..."
+                }
+                className="min-h-[300px] resize-none"
+              />
+              {postType === 'link' && (
+                <p className="text-sm text-gray-500 mt-1">
+                  외부 링크 글이라도 팀 블로그에서 댓글과 토론이 가능하도록 내용을 작성해주세요.
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
@@ -172,7 +181,7 @@ const CreatePostModal = ({ isOpen, onClose, onSave }: CreatePostModalProps) => {
             </Button>
             <Button 
               onClick={handleSave}
-              disabled={!title || !category || (postType === 'content' ? !content : !externalUrl)}
+              disabled={!title || !category || !content}
               className="bg-blue-600 hover:bg-blue-700"
             >
               <Save className="h-4 w-4 mr-2" />
