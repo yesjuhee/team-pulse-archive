@@ -27,13 +27,13 @@ interface PostCardProps {
 const getCategoryColor = (category: string) => {
   switch (category) {
     case 'sprint':
-      return 'bg-green-100 text-green-800';
+      return 'bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-800 border-emerald-200';
     case 'troubleshooting':
-      return 'bg-red-100 text-red-800';
+      return 'bg-gradient-to-r from-rose-100 to-pink-100 text-rose-800 border-rose-200';
     case 'tech':
-      return 'bg-blue-100 text-blue-800';
+      return 'bg-gradient-to-r from-violet-100 to-purple-100 text-violet-800 border-violet-200';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 border-gray-200';
   }
 };
 
@@ -82,24 +82,24 @@ const PostCard = ({ post, onClick }: PostCardProps) => {
 
   return (
     <article 
-      className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg hover:border-blue-200 transition-all duration-200 cursor-pointer group"
+      className="bg-white/80 backdrop-blur-sm rounded-xl border border-purple-100 p-6 hover:shadow-xl hover:shadow-purple-100/50 hover:border-purple-200 transition-all duration-300 cursor-pointer group hover:-translate-y-1"
       onClick={handleCardClick}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <Badge className={getCategoryColor(post.category)}>
+            <Badge className={`${getCategoryColor(post.category)} border`}>
               {getCategoryName(post.category)}
             </Badge>
             {post.isExternal && (
-              <Badge variant="outline" className="text-blue-600 border-blue-200">
+              <Badge variant="outline" className="text-purple-600 border-purple-200 bg-purple-50">
                 <ExternalLink className="h-3 w-3 mr-1" />
                 외부 링크
               </Badge>
             )}
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+          <h3 className="text-xl font-semibold text-gray-900 group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-pink-600 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 line-clamp-2">
             {post.title}
           </h3>
         </div>
@@ -107,8 +107,8 @@ const PostCard = ({ post, onClick }: PostCardProps) => {
           variant="ghost"
           size="sm"
           onClick={handleBookmark}
-          className={`opacity-0 group-hover:opacity-100 transition-opacity ${
-            isBookmarked ? 'text-blue-600' : 'text-gray-400'
+          className={`opacity-0 group-hover:opacity-100 transition-all duration-300 ${
+            isBookmarked ? 'text-purple-600 bg-purple-50' : 'text-gray-400 hover:text-purple-600 hover:bg-purple-50'
           }`}
         >
           <Bookmark className={`h-4 w-4 ${isBookmarked ? 'fill-current' : ''}`} />
@@ -123,7 +123,7 @@ const PostCard = ({ post, onClick }: PostCardProps) => {
       {/* Footer */}
       <div className="flex items-center justify-between text-sm text-gray-500">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 hover:text-purple-600 transition-colors">
             <User className="h-4 w-4" />
             <span>{post.author}</span>
           </div>
@@ -136,14 +136,14 @@ const PostCard = ({ post, onClick }: PostCardProps) => {
         <div className="flex items-center gap-4">
           <button 
             onClick={handleLike}
-            className={`flex items-center gap-1 transition-colors ${
-              isLiked ? 'text-red-500' : 'hover:text-red-500'
+            className={`flex items-center gap-1 transition-all duration-300 ${
+              isLiked ? 'text-pink-500 scale-110' : 'hover:text-pink-500 hover:scale-105'
             }`}
           >
             <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
             <span>{currentLikes}</span>
           </button>
-          <div className="flex items-center gap-1 hover:text-blue-500 transition-colors">
+          <div className="flex items-center gap-1 hover:text-purple-500 transition-colors">
             <MessageCircle className="h-4 w-4" />
             <span>{post.comments}</span>
           </div>

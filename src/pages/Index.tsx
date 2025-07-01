@@ -84,7 +84,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
       <Header onCreatePost={() => setIsCreatePostModalOpen(true)} />
       
       <div className="flex">
@@ -100,10 +100,10 @@ const Index = () => {
           
           <div className="mt-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 {selectedAuthor ? `${selectedAuthor}의 글` : '최근 게시물'}
               </h2>
-              <p className="text-gray-600">{filteredPosts.length}개의 글</p>
+              <p className="text-gray-600 bg-white/60 px-3 py-1 rounded-full text-sm">{filteredPosts.length}개의 글</p>
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
