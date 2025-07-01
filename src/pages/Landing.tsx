@@ -89,7 +89,7 @@ const Landing = () => {
               <span className="ml-2 text-sm text-gray-500">팀 프로젝트 아카이브</span>
             </div>
             <Button variant="outline" asChild>
-              <Link to="/team-blog">팀 블로그 만들기</Link>
+              <Link to="/create-team">팀 블로그 만들기</Link>
             </Button>
           </div>
         </div>
