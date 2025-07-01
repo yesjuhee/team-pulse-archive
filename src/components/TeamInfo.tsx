@@ -5,12 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 const TeamInfo = () => {
-  const techStack = ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'AWS'];
+  const techStack = ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'AWS', 'Docker', 'Redis'];
   const teamMembers = [
-    { name: '김민준', role: 'Frontend Developer', github: 'minjun-kim' },
-    { name: '이지혜', role: 'Project Manager', github: 'jihye-lee' },
-    { name: '박서연', role: 'Backend Developer', github: 'seoyeon-park' },
-    { name: '정수진', role: 'UI/UX Designer', github: 'sujin-jung' },
+    { name: '김개발', role: 'Frontend Developer', github: 'kim-dev' },
+    { name: '이백엔드', role: 'Backend Developer', github: 'lee-backend' },
+    { name: '박인프라', role: 'DevOps Engineer', github: 'park-infra' },
+    { name: '정디자인', role: 'UI/UX Designer', github: 'jung-design' },
+    { name: '최기획', role: 'Project Manager', github: 'choi-pm' },
   ];
 
   return (
@@ -18,11 +19,11 @@ const TeamInfo = () => {
       {/* Project Header */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          팀 블로그 프로젝트
+          스마트 시티 플랫폼 프로젝트
         </h1>
         <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-          팀원들의 프로젝트 정보를 통합하고 공유하여 정보 파편화를 방지하고 
-          협업 효율을 높여 포트폴리오로 활용 가능한 팀 블로그 서비스
+          IoT 센서와 AI를 활용하여 도시 인프라를 효율적으로 관리하고 
+          시민들에게 실시간 정보를 제공하는 통합 스마트 시티 관리 플랫폼
         </p>
       </div>
 
@@ -31,13 +32,13 @@ const TeamInfo = () => {
         <div className="text-center p-4 bg-blue-50 rounded-lg">
           <Calendar className="h-8 w-8 text-blue-600 mx-auto mb-2" />
           <h3 className="font-semibold text-gray-900">프로젝트 기간</h3>
-          <p className="text-gray-600">2024.01 - 2024.03</p>
+          <p className="text-gray-600">2023.09 - 2024.02 (6개월)</p>
         </div>
         
         <div className="text-center p-4 bg-green-50 rounded-lg">
           <Users className="h-8 w-8 text-green-600 mx-auto mb-2" />
           <h3 className="font-semibold text-gray-900">팀 구성</h3>
-          <p className="text-gray-600">4명 (풀스택)</p>
+          <p className="text-gray-600">5명 (풀스택)</p>
         </div>
         
         <div className="text-center p-4 bg-purple-50 rounded-lg">

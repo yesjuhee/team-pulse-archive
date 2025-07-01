@@ -6,48 +6,48 @@ import PostCard from '@/components/PostCard';
 import CreatePostModal from '@/components/CreatePostModal';
 import TeamInfo from '@/components/TeamInfo';
 
-// Sample data
+// Updated sample data with Smart City project theme
 const initialPosts = [
   {
     id: '1',
-    title: 'React 상태 관리 라이브러리 선택 과정',
-    content: '프로젝트 초기에 Redux vs Zustand vs Context API 중 어떤 것을 선택할지 고민했습니다. 각각의 장단점을 분석하고 팀의 요구사항에 맞는 최적의 선택을 한 과정을 공유합니다.',
-    author: '김민준',
+    title: 'IoT 센서 데이터 실시간 처리 아키텍처 설계',
+    content: '스마트 시티 플랫폼에서 수천 개의 IoT 센서로부터 실시간으로 데이터를 수집하고 처리하기 위한 아키텍처를 설계했습니다. Apache Kafka와 Redis를 활용한 메시지 큐 시스템과 마이크로서비스 구조를 적용했습니다.',
+    author: '김개발',
     category: 'tech',
     date: '2024.01.15',
-    likes: 12,
-    comments: 5,
+    likes: 23,
+    comments: 8,
   },
   {
     id: '2',
-    title: '1차 스프린트 회고 - 개발 환경 구축',
-    content: '첫 번째 스프린트에서 개발 환경 구축과 기본 아키텍처 설계를 완료했습니다. 예상보다 시간이 오래 걸렸던 부분과 다음 스프린트에서 개선할 점들을 정리했습니다.',
-    author: '이지혜',
+    title: '2차 스프린트 회고 - 실시간 대시보드 개발',
+    content: '시민들이 실시간으로 도시 정보를 확인할 수 있는 대시보드를 개발했습니다. React와 WebSocket을 활용한 실시간 데이터 시각화 과정에서 겪은 어려움과 해결 방법을 공유합니다.',
+    author: '이백엔드',
     category: 'sprint',
     date: '2024.01.12',
-    likes: 8,
-    comments: 3,
+    likes: 15,
+    comments: 6,
   },
   {
     id: '3',
-    title: 'CORS 에러 해결기',
-    content: 'API 연동 중 CORS 에러가 발생했습니다. 프록시 설정, 서버 설정 변경 등 여러 방법을 시도한 과정과 최종 해결 방법을 상세히 기록했습니다.',
-    author: '박서연',
+    title: 'Docker 컨테이너 메모리 부족 이슈 해결기',
+    content: '마이크로서비스들을 Docker로 배포하는 과정에서 메모리 부족 이슈가 발생했습니다. 컨테이너 리소스 최적화와 메모리 누수 해결 과정을 상세히 기록했습니다.',
+    author: '박인프라',
     category: 'troubleshooting',
     date: '2024.01.10',
-    likes: 15,
-    comments: 7,
+    likes: 31,
+    comments: 12,
     isExternal: true,
-    externalUrl: 'https://example.com/cors-solution',
+    externalUrl: 'https://example.com/docker-memory-solution',
   },
   {
     id: '4',
-    title: 'TypeScript 타입 가드 활용법',
-    content: 'TypeScript에서 런타임 타입 체크를 위한 타입 가드 패턴들을 정리했습니다. 실제 프로젝트에서 사용한 예제와 함께 설명합니다.',
-    author: '김민준',
+    title: 'React Query를 활용한 서버 상태 관리 최적화',
+    content: '실시간 데이터가 많은 스마트 시티 플랫폼에서 React Query를 도입하여 서버 상태 관리를 최적화한 경험을 공유합니다. 캐싱 전략과 백그라운드 리페치 설정을 중심으로 설명합니다.',
+    author: '김개발',
     category: 'tech',
     date: '2024.01.08',
-    likes: 20,
+    likes: 18,
     comments: 4,
   }
 ];
@@ -71,7 +71,7 @@ const Index = () => {
       window.open(post.externalUrl, '_blank');
     } else {
       console.log('Post clicked:', post.id);
-      // Here you would navigate to the post detail page
+      // Navigation will be handled by PostCard component
     }
   };
 

@@ -15,10 +15,11 @@ const categories = [
 ];
 
 const teamMembers = [
-  { name: '김민준', role: 'Frontend Developer', posts: 8 },
-  { name: '이지혜', role: 'Project Manager', posts: 5 },
-  { name: '박서연', role: 'Backend Developer', posts: 7 },
-  { name: '정수진', role: 'UI/UX Designer', posts: 4 },
+  { name: '김개발', role: 'Frontend Developer', posts: 12 },
+  { name: '이백엔드', role: 'Backend Developer', posts: 8 },
+  { name: '박인프라', role: 'DevOps Engineer', posts: 6 },
+  { name: '정디자인', role: 'UI/UX Designer', posts: 4 },
+  { name: '최기획', role: 'Project Manager', posts: 7 },
 ];
 
 const Sidebar = ({ selectedCategory, onCategoryChange }: SidebarProps) => {

@@ -1,7 +1,10 @@
 
-import React from 'react';
-import { Calendar, User, Heart, MessageCircle, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, User, Heart, MessageCircle, ExternalLink, Bookmark } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { Link } from 'react-router-dom';
 
 interface Post {
   id: string;
@@ -48,10 +51,31 @@ const getCategoryName = (category: string) => {
 };
 
 const PostCard = ({ post, onClick }: PostCardProps) => {
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const { toast } = useToast();
+
+  const handleBookmark = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsBookmarked(!isBookmarked);
+    toast({
+      title: isBookmarked ? "북마크가 해제되었습니다" : "북마크에 추가되었습니다",
+      duration: 2000,
+    });
+  };
+
+  const handleCardClick = () => {
+    if (post.isExternal && post.externalUrl) {
+      onClick();
+    } else {
+      // Navigate to post detail page
+      window.location.href = `/post/${post.id}`;
+    }
+  };
+
   return (
     <article 
       className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg hover:border-blue-200 transition-all duration-200 cursor-pointer group"
-      onClick={onClick}
+      onClick={handleCardClick}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
@@ -71,6 +95,16 @@ const PostCard = ({ post, onClick }: PostCardProps) => {
             {post.title}
           </h3>
         </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleBookmark}
+          className={`opacity-0 group-hover:opacity-100 transition-opacity ${
+            isBookmarked ? 'text-blue-600' : 'text-gray-400'
+          }`}
+        >
+          <Bookmark className={`h-4 w-4 ${isBookmarked ? 'fill-current' : ''}`} />
+        </Button>
       </div>
 
       {/* Content Preview */}
