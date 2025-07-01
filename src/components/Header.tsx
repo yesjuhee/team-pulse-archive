@@ -1,95 +1,60 @@
 
 import React from 'react';
-import { Search, Plus, User, Settings, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Link, useLocation } from 'react-router-dom';
+import { PlusCircle, Search, Bell, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface HeaderProps {
   onCreatePost: () => void;
 }
 
 const Header = ({ onCreatePost }: HeaderProps) => {
-  const location = useLocation();
-  const isTeamBlogPage = location.pathname === '/team-blog' || location.pathname.startsWith('/team/');
-  const isLandingPage = location.pathname === '/';
-
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo and Navigation */}
-          <div className="flex items-center gap-4">
-            {isTeamBlogPage && (
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/" className="flex items-center gap-2">
-                  <ArrowLeft className="h-4 w-4" />
-                  홈으로
-                </Link>
-              </Button>
-            )}
-            <div className="flex items-center">
-              <Link to="/">
-                <h1 className="text-2xl font-bold text-blue-600">TeamBlog</h1>
-              </Link>
-              {!isLandingPage && (
-                <span className="ml-2 text-sm text-gray-500">스마트 시티 플랫폼 팀</span>
-              )}
-            </div>
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+              TeamLog
+            </Link>
+            <span className="ml-2 text-sm text-gray-500">팀 프로젝트 아카이브</span>
           </div>
 
-          {/* Search */}
-          <div className="flex-1 max-w-md mx-8">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                type="text"
-                placeholder="프로젝트, 기술스택, 작성자 검색..."
-                className="pl-10 pr-4 py-2 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-          </div>
+          {/* Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link to="/team-blog" className="text-gray-700 hover:text-blue-600 transition-colors">
+              팀 블로그
+            </Link>
+            <Link to="/create-team" className="text-gray-700 hover:text-blue-600 transition-colors">
+              팀 만들기
+            </Link>
+          </nav>
 
           {/* Actions */}
           <div className="flex items-center space-x-4">
-            {isLandingPage ? (
-              <>
-                <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <Link to="/create-team">
-                    <Plus className="h-4 w-4 mr-2" />
-                    팀 블로그 만들기
-                  </Link>
-                </Button>
-                <Button variant="outline" asChild>
-                  <Link to="/mypage">
-                    <User className="h-4 w-4 mr-2" />
-                    마이페이지
-                  </Link>
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
-                  onClick={onCreatePost}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-                >
-                  <Plus className="h-4 w-4" />
-                  글쓰기
-                </Button>
-                
-                <Button variant="ghost" size="icon" className="hover:bg-gray-100" asChild>
-                  <Link to="/team/smart-city/manage">
-                    <Settings className="h-5 w-5 text-gray-600" />
-                  </Link>
-                </Button>
-                
-                <Button variant="ghost" size="icon" className="hover:bg-gray-100" asChild>
-                  <Link to="/mypage">
-                    <User className="h-5 w-5 text-gray-600" />
-                  </Link>
-                </Button>
-              </>
-            )}
+            <Button variant="ghost" size="sm">
+              <Search className="h-4 w-4" />
+            </Button>
+            
+            <Button variant="ghost" size="sm">
+              <Bell className="h-4 w-4" />
+            </Button>
+            
+            <Button 
+              onClick={onCreatePost}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              size="sm"
+            >
+              <PlusCircle className="h-4 w-4 mr-2" />
+              글쓰기
+            </Button>
+            
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/mypage">
+                <User className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </div>

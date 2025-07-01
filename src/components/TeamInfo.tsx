@@ -1,99 +1,140 @@
 
 import React from 'react';
-import { Github, ExternalLink, Users, Calendar, Code } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Calendar, MapPin, Users, Github, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Link } from 'react-router-dom';
+
+const teamData = {
+  name: '스마트 시티 플랫폼',
+  description: 'IoT 센서와 AI를 활용한 스마트 시티 관리 플랫폼을 개발하는 팀입니다. 도시의 교통, 환경, 안전 데이터를 실시간으로 수집하고 분석하여 시민들에게 더 나은 도시 서비스를 제공하는 것이 목표입니다.',
+  period: '2023.09 - 2024.03',
+  location: '서울, 대한민국',
+  members: [
+    { 
+      name: '김개발', 
+      role: 'Frontend Developer',
+      avatar: 'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=400&h=400&fit=crop'
+    },
+    { 
+      name: '이백엔드', 
+      role: 'Backend Developer',
+      avatar: 'https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=400&h=400&fit=crop'
+    },
+    { 
+      name: '박인프라', 
+      role: 'DevOps Engineer',
+      avatar: 'https://images.unsplash.com/photo-1501286353178-1ec881214838?w=400&h=400&fit=crop'
+    },
+    { 
+      name: '정디자인', 
+      role: 'UI/UX Designer',
+      avatar: 'https://images.unsplash.com/photo-1485833077593-4278bba3f11f?w=400&h=400&fit=crop'
+    },
+    { 
+      name: '최기획', 
+      role: 'Project Manager',
+      avatar: null
+    },
+  ],
+  techStack: ['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'AWS', 'IoT', 'AI/ML'],
+  links: {
+    github: 'https://github.com/smart-city-platform',
+    demo: 'https://smart-city-demo.com'
+  }
+};
 
 const TeamInfo = () => {
-  const techStack = ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'AWS', 'Docker', 'Redis'];
-  const teamMembers = [
-    { name: '김개발', role: 'Frontend Developer', github: 'kim-dev' },
-    { name: '이백엔드', role: 'Backend Developer', github: 'lee-backend' },
-    { name: '박인프라', role: 'DevOps Engineer', github: 'park-infra' },
-    { name: '정디자인', role: 'UI/UX Designer', github: 'jung-design' },
-    { name: '최기획', role: 'Project Manager', github: 'choi-pm' },
-  ];
-
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-8 mb-8">
-      {/* Project Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          스마트 시티 플랫폼 프로젝트
-        </h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-          IoT 센서와 AI를 활용하여 도시 인프라를 효율적으로 관리하고 
-          시민들에게 실시간 정보를 제공하는 통합 스마트 시티 관리 플랫폼
-        </p>
-      </div>
-
-      {/* Quick Info */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="text-center p-4 bg-blue-50 rounded-lg">
-          <Calendar className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-          <h3 className="font-semibold text-gray-900">프로젝트 기간</h3>
-          <p className="text-gray-600">2023.09 - 2024.02 (6개월)</p>
-        </div>
-        
-        <div className="text-center p-4 bg-green-50 rounded-lg">
-          <Users className="h-8 w-8 text-green-600 mx-auto mb-2" />
-          <h3 className="font-semibold text-gray-900">팀 구성</h3>
-          <p className="text-gray-600">5명 (풀스택)</p>
-        </div>
-        
-        <div className="text-center p-4 bg-purple-50 rounded-lg">
-          <Code className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-          <h3 className="font-semibold text-gray-900">개발 스택</h3>
-          <p className="text-gray-600">{techStack.length}개 기술</p>
-        </div>
-      </div>
-
-      {/* Tech Stack */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-4">기술 스택</h2>
-        <div className="flex flex-wrap gap-2">
-          {techStack.map((tech) => (
-            <Badge key={tech} variant="secondary" className="px-3 py-1 text-sm">
-              {tech}
-            </Badge>
-          ))}
-        </div>
-      </div>
-
-      {/* Team Members */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-4">팀원 소개</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {teamMembers.map((member) => (
-            <div key={member.name} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:border-blue-200 transition-colors">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
-                {member.name.charAt(0)}
+    <Card className="mb-8">
+      <CardContent className="p-8">
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{teamData.name}</h1>
+            <p className="text-gray-600 leading-relaxed mb-4">{teamData.description}</p>
+            
+            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-4">
+              <div className="flex items-center gap-1">
+                <Calendar className="h-4 w-4" />
+                <span>{teamData.period}</span>
               </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-gray-900">{member.name}</h3>
-                <p className="text-gray-600 text-sm">{member.role}</p>
+              <div className="flex items-center gap-1">
+                <MapPin className="h-4 w-4" />
+                <span>{teamData.location}</span>
               </div>
-              <Button variant="outline" size="sm" className="flex items-center gap-1">
-                <Github className="h-4 w-4" />
-                GitHub
-              </Button>
+              <div className="flex items-center gap-1">
+                <Users className="h-4 w-4" />
+                <span>{teamData.members.length}명</span>
+              </div>
             </div>
-          ))}
+          </div>
+          
+          <div className="flex flex-col gap-2">
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/team/smart-city-platform/manage">
+                팀 관리
+              </Link>
+            </Button>
+          </div>
         </div>
-      </div>
 
-      {/* Project Links */}
-      <div className="flex flex-wrap gap-4 justify-center">
-        <Button className="bg-gray-900 hover:bg-gray-800 text-white">
-          <Github className="h-4 w-4 mr-2" />
-          GitHub Repository
-        </Button>
-        <Button variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-50">
-          <ExternalLink className="h-4 w-4 mr-2" />
-          Live Demo
-        </Button>
-      </div>
-    </div>
+        {/* Tech Stack */}
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">기술 스택</h3>
+          <div className="flex flex-wrap gap-2">
+            {teamData.techStack.map((tech) => (
+              <Badge key={tech} variant="secondary" className="px-3 py-1">
+                {tech}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        {/* Team Members */}
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">팀원</h3>
+          <div className="flex flex-wrap gap-4">
+            {teamData.members.map((member) => (
+              <div key={member.name} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <Avatar className="w-10 h-10">
+                  {member.avatar ? (
+                    <AvatarImage src={member.avatar} alt={member.name} />
+                  ) : null}
+                  <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white font-semibold">
+                    {member.name.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-medium text-gray-900">{member.name}</p>
+                  <p className="text-sm text-gray-500">{member.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Links */}
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">프로젝트 링크</h3>
+          <div className="flex gap-3">
+            <Button variant="outline" size="sm" asChild>
+              <a href={teamData.links.github} target="_blank" rel="noopener noreferrer">
+                <Github className="h-4 w-4 mr-2" />
+                GitHub
+              </a>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <a href={teamData.links.demo} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="h-4 w-4 mr-2" />
+                데모 보기
+              </a>
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

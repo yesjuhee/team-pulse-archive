@@ -126,12 +126,14 @@ const PostDetail = () => {
   const { id } = useParams();
   const { toast } = useToast();
   const [isLiked, setIsLiked] = useState(false);
+  const [currentLikes, setCurrentLikes] = useState(mockPost.likes);
   const [isBookmarked, setIsBookmarked] = useState(mockPost.isBookmarked);
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState(mockComments);
 
   const handleLike = () => {
     setIsLiked(!isLiked);
+    setCurrentLikes(prev => isLiked ? prev - 1 : prev + 1);
     toast({
       title: isLiked ? "좋아요가 취소되었습니다" : "좋아요를 눌렀습니다",
       duration: 2000,
@@ -240,10 +242,12 @@ const PostDetail = () => {
                 variant={isLiked ? "default" : "outline"}
                 size="sm"
                 onClick={handleLike}
-                className="flex items-center gap-1"
+                className={`flex items-center gap-1 ${
+                  isLiked ? 'bg-red-500 hover:bg-red-600 text-white border-red-500' : ''
+                }`}
               >
-                <Heart className={`h-4 w-4 ${isLiked ? 'fill-current text-red-500' : ''}`} />
-                {mockPost.likes + (isLiked ? 1 : 0)}
+                <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
+                {currentLikes}
               </Button>
               <div className="flex items-center gap-1 text-gray-500">
                 <MessageCircle className="h-4 w-4" />

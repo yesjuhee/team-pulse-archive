@@ -52,6 +52,8 @@ const getCategoryName = (category: string) => {
 
 const PostCard = ({ post, onClick }: PostCardProps) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [currentLikes, setCurrentLikes] = useState(post.likes);
   const { toast } = useToast();
 
   const handleBookmark = (e: React.MouseEvent) => {
@@ -63,13 +65,19 @@ const PostCard = ({ post, onClick }: PostCardProps) => {
     });
   };
 
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsLiked(!isLiked);
+    setCurrentLikes(prev => isLiked ? prev - 1 : prev + 1);
+    toast({
+      title: isLiked ? "좋아요가 취소되었습니다" : "좋아요를 눌렀습니다",
+      duration: 2000,
+    });
+  };
+
   const handleCardClick = () => {
-    if (post.isExternal && post.externalUrl) {
-      onClick();
-    } else {
-      // Navigate to post detail page
-      window.location.href = `/post/${post.id}`;
-    }
+    // Always navigate to post detail page instead of external URL
+    window.location.href = `/post/${post.id}`;
   };
 
   return (
@@ -126,10 +134,15 @@ const PostCard = ({ post, onClick }: PostCardProps) => {
         </div>
         
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1 hover:text-red-500 transition-colors">
-            <Heart className="h-4 w-4" />
-            <span>{post.likes}</span>
-          </div>
+          <button 
+            onClick={handleLike}
+            className={`flex items-center gap-1 transition-colors ${
+              isLiked ? 'text-red-500' : 'hover:text-red-500'
+            }`}
+          >
+            <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
+            <span>{currentLikes}</span>
+          </button>
           <div className="flex items-center gap-1 hover:text-blue-500 transition-colors">
             <MessageCircle className="h-4 w-4" />
             <span>{post.comments}</span>

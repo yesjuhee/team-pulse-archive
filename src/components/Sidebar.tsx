@@ -1,10 +1,13 @@
 
 import React from 'react';
 import { Book, Users, Calendar, Hash } from 'lucide-react';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 interface SidebarProps {
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
+  selectedAuthor?: string;
+  onAuthorChange: (author: string) => void;
 }
 
 const categories = [
@@ -15,14 +18,39 @@ const categories = [
 ];
 
 const teamMembers = [
-  { name: '김개발', role: 'Frontend Developer', posts: 12 },
-  { name: '이백엔드', role: 'Backend Developer', posts: 8 },
-  { name: '박인프라', role: 'DevOps Engineer', posts: 6 },
-  { name: '정디자인', role: 'UI/UX Designer', posts: 4 },
-  { name: '최기획', role: 'Project Manager', posts: 7 },
+  { 
+    name: '김개발', 
+    role: 'Frontend Developer', 
+    posts: 12,
+    avatar: 'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=400&h=400&fit=crop'
+  },
+  { 
+    name: '이백엔드', 
+    role: 'Backend Developer', 
+    posts: 8,
+    avatar: 'https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=400&h=400&fit=crop'
+  },
+  { 
+    name: '박인프라', 
+    role: 'DevOps Engineer', 
+    posts: 6,
+    avatar: 'https://images.unsplash.com/photo-1501286353178-1ec881214838?w=400&h=400&fit=crop'
+  },
+  { 
+    name: '정디자인', 
+    role: 'UI/UX Designer', 
+    posts: 4,
+    avatar: 'https://images.unsplash.com/photo-1485833077593-4278bba3f11f?w=400&h=400&fit=crop'
+  },
+  { 
+    name: '최기획', 
+    role: 'Project Manager', 
+    posts: 7,
+    avatar: null
+  },
 ];
 
-const Sidebar = ({ selectedCategory, onCategoryChange }: SidebarProps) => {
+const Sidebar = ({ selectedCategory, onCategoryChange, selectedAuthor, onAuthorChange }: SidebarProps) => {
   return (
     <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-16 overflow-y-auto">
       <div className="p-6">
@@ -66,18 +94,39 @@ const Sidebar = ({ selectedCategory, onCategoryChange }: SidebarProps) => {
             팀원
           </h2>
           <div className="space-y-3">
-            {teamMembers.map((member) => (
-              <div key={member.name} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                  {member.name.charAt(0)}
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">{member.name}</p>
-                  <p className="text-xs text-gray-500">{member.role}</p>
-                </div>
-                <span className="text-xs text-gray-400">{member.posts}개</span>
-              </div>
-            ))}
+            {teamMembers.map((member) => {
+              const isSelected = selectedAuthor === member.name;
+              
+              return (
+                <button
+                  key={member.name}
+                  onClick={() => onAuthorChange(isSelected ? '' : member.name)}
+                  className={`w-full flex items-center gap-3 p-2 rounded-lg transition-colors ${
+                    isSelected 
+                      ? 'bg-blue-50 border border-blue-200' 
+                      : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <Avatar className="w-8 h-8">
+                    {member.avatar ? (
+                      <AvatarImage src={member.avatar} alt={member.name} />
+                    ) : null}
+                    <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white text-sm font-semibold">
+                      {member.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 text-left">
+                    <p className={`text-sm font-medium ${isSelected ? 'text-blue-700' : 'text-gray-900'}`}>
+                      {member.name}
+                    </p>
+                    <p className="text-xs text-gray-500">{member.role}</p>
+                  </div>
+                  <span className={`text-xs ${isSelected ? 'text-blue-600' : 'text-gray-400'}`}>
+                    {member.posts}개
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
