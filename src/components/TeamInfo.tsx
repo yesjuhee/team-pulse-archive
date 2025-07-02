@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const teamData = {
   name: '스마트 시티 플랫폼',
@@ -52,6 +52,8 @@ const teamData = {
 };
 
 const TeamInfo = () => {
+  const { teamId } = useParams();
+  
   return (
     <Card className="mb-8">
       <CardContent className="p-8">
@@ -97,32 +99,38 @@ const TeamInfo = () => {
           </div>
         </div>
 
-        {/* Team Members - Enhanced Layout */}
+        {/* Team Members - Single Column Layout */}
         <div className="mb-8">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">팀원</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4">
             {teamData.members.map((member) => (
-              <div key={member.name} className="flex gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <Avatar className="w-16 h-16 flex-shrink-0">
-                  {member.avatar ? (
-                    <AvatarImage src={member.avatar} alt={member.name} />
-                  ) : null}
-                  <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white font-semibold text-lg">
-                    {member.name.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <p className="font-semibold text-gray-900 text-lg">{member.name}</p>
-                    <Badge variant="outline" className="text-xs">
-                      {member.role}
-                    </Badge>
+              <Link 
+                key={member.name} 
+                to={`/team/${teamId}/member/${encodeURIComponent(member.name)}`}
+                className="block"
+              >
+                <div className="flex gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                  <Avatar className="w-16 h-16 flex-shrink-0">
+                    {member.avatar ? (
+                      <AvatarImage src={member.avatar} alt={member.name} />
+                    ) : null}
+                    <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white font-semibold text-lg">
+                      {member.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="font-semibold text-gray-900 text-lg">{member.name}</p>
+                      <Badge variant="outline" className="text-xs">
+                        {member.role}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {member.intro}
+                    </p>
                   </div>
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    {member.intro}
-                  </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

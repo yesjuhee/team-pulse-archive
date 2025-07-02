@@ -11,6 +11,7 @@ import CreateTeam from "./pages/CreateTeam";
 import TeamManagement from "./pages/TeamManagement";
 import TeamSettings from "./pages/TeamSettings";
 import MyPage from "./pages/MyPage";
+import MemberProfile from "./pages/MemberProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/team-blog" element={<Index />} />
           <Route path="/team/:teamId" element={<Index />} />
+          <Route path="/team/:teamId/member/:memberName" element={<MemberProfile />} />
           <Route path="/post/:id" element={<PostDetail />} />
           <Route path="/create-team" element={<CreateTeam />} />
           <Route path="/team/:teamId/manage" element={<TeamManagement />} />

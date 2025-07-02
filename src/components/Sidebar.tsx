@@ -2,6 +2,7 @@
 import React from 'react';
 import { Book, Users, Calendar, Hash } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Link, useParams } from 'react-router-dom';
 
 interface SidebarProps {
   selectedCategory: string;
@@ -51,6 +52,8 @@ const teamMembers = [
 ];
 
 const Sidebar = ({ selectedCategory, onCategoryChange, selectedAuthor, onAuthorChange }: SidebarProps) => {
+  const { teamId } = useParams();
+  
   return (
     <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-16 overflow-y-auto">
       <div className="p-6">
@@ -98,33 +101,41 @@ const Sidebar = ({ selectedCategory, onCategoryChange, selectedAuthor, onAuthorC
               const isSelected = selectedAuthor === member.name;
               
               return (
-                <button
-                  key={member.name}
-                  onClick={() => onAuthorChange(isSelected ? '' : member.name)}
-                  className={`w-full flex items-center gap-3 p-2 rounded-lg transition-colors ${
-                    isSelected 
-                      ? 'bg-blue-50 border border-blue-200' 
-                      : 'hover:bg-gray-50'
-                  }`}
-                >
-                  <Avatar className="w-8 h-8">
-                    {member.avatar ? (
-                      <AvatarImage src={member.avatar} alt={member.name} />
-                    ) : null}
-                    <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white text-sm font-semibold">
-                      {member.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 text-left">
-                    <p className={`text-sm font-medium ${isSelected ? 'text-blue-700' : 'text-gray-900'}`}>
-                      {member.name}
-                    </p>
-                    <p className="text-xs text-gray-500">{member.role}</p>
-                  </div>
-                  <span className={`text-xs ${isSelected ? 'text-blue-600' : 'text-gray-400'}`}>
-                    {member.posts}개
-                  </span>
-                </button>
+                <div key={member.name} className="relative">
+                  <button
+                    onClick={() => onAuthorChange(isSelected ? '' : member.name)}
+                    className={`w-full flex items-center gap-3 p-2 rounded-lg transition-colors ${
+                      isSelected 
+                        ? 'bg-blue-50 border border-blue-200' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <Avatar className="w-8 h-8">
+                      {member.avatar ? (
+                        <AvatarImage src={member.avatar} alt={member.name} />
+                      ) : null}
+                      <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white text-sm font-semibold">
+                        {member.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 text-left">
+                      <p className={`text-sm font-medium ${isSelected ? 'text-blue-700' : 'text-gray-900'}`}>
+                        {member.name}
+                      </p>
+                      <p className="text-xs text-gray-500">{member.role}</p>
+                    </div>
+                    <span className={`text-xs ${isSelected ? 'text-blue-600' : 'text-gray-400'}`}>
+                      {member.posts}개
+                    </span>
+                  </button>
+                  
+                  {/* Profile Link Overlay */}
+                  <Link 
+                    to={`/team/${teamId}/member/${encodeURIComponent(member.name)}`}
+                    className="absolute inset-0 z-10"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
               );
             })}
           </div>
