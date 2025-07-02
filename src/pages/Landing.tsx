@@ -261,8 +261,8 @@ const Landing = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts.map((post) => (
-                <Card key={post.id} className="hover:shadow-lg transition-shadow cursor-pointer" asChild>
-                  <Link to={`/post/${post.id}`}>
+                <Link key={post.id} to={`/post/${post.id}`}>
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
                     <CardHeader>
                       <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
                         <div className="flex items-center gap-2">
@@ -283,8 +283,8 @@ const Landing = () => {
                         </div>
                       </div>
                     </CardContent>
-                  </Link>
-                </Card>
+                  </Card>
+                </Link>
               ))}
             </div>
 
@@ -322,8 +322,8 @@ const Landing = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredBlogs.map((blog) => (
-                <Card key={blog.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer" asChild>
-                  <Link to={`/team/${blog.id}`}>
+                <Link key={blog.id} to={`/team/${blog.id}`}>
+                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer">
                     <div className="aspect-video overflow-hidden">
                       <img 
                         src={blog.image} 
@@ -356,8 +356,8 @@ const Landing = () => {
                         <span>{blog.lastUpdate}</span>
                       </div>
                     </CardContent>
-                  </Link>
-                </Card>
+                  </Card>
+                </Link>
               ))}
             </div>
 
