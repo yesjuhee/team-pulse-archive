@@ -6,9 +6,10 @@ import { Link, useParams } from 'react-router-dom';
 
 interface HeaderProps {
   onCreatePost: () => void;
+  onHomeClick?: () => void;
 }
 
-const Header = ({ onCreatePost }: HeaderProps) => {
+const Header = ({ onCreatePost, onHomeClick }: HeaderProps) => {
   const { teamId } = useParams();
   
   return (
@@ -25,9 +26,12 @@ const Header = ({ onCreatePost }: HeaderProps) => {
           {/* Team Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             {teamId === 'smart-city-platform' ? (
-              <Link to="/team/smart-city-platform" className="text-gray-700 hover:text-purple-600 transition-colors font-medium flex items-center gap-2">
+              <button 
+                onClick={onHomeClick}
+                className="text-gray-700 hover:text-purple-600 transition-colors font-medium flex items-center gap-2"
+              >
                 🏙️ <span>스마트 시티 플랫폼</span>
-              </Link>
+              </button>
             ) : (
               <>
                 <Link to="/team-blog" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">

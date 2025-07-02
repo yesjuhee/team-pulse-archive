@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Book, Users, Calendar, Hash, FileText, Tag } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -11,7 +10,6 @@ interface SidebarProps {
   onAuthorChange: (author: string) => void;
   selectedTag?: string;
   onTagChange: (tag: string) => void;
-  onHomeClick: () => void;
 }
 
 const categories = [
@@ -72,25 +70,13 @@ const Sidebar = ({
   selectedAuthor, 
   onAuthorChange,
   selectedTag,
-  onTagChange,
-  onHomeClick
+  onTagChange
 }: SidebarProps) => {
   const { teamId } = useParams();
   
   return (
     <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-16 overflow-y-auto">
       <div className="p-6">
-        {/* Home Button */}
-        <div className="mb-8">
-          <button
-            onClick={onHomeClick}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            <Book className="h-4 w-4" />
-            <span className="font-medium">프로젝트 대문</span>
-          </button>
-        </div>
-
         {/* Categories */}
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">카테고리</h2>

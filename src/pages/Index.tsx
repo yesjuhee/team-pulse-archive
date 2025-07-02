@@ -84,7 +84,7 @@ const Index = () => {
   const [selectedTag, setSelectedTag] = useState('');
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const [posts, setPosts] = useState(mockPosts);
-  const [currentView, setCurrentView] = useState<'home' | 'posts'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'posts'>('posts');
 
   // Filter posts based on selected category, author, and tag
   const filteredPosts = posts.filter(post => {
@@ -132,7 +132,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
-      <Header onCreatePost={() => setIsCreatePostModalOpen(true)} />
+      <Header 
+        onCreatePost={() => setIsCreatePostModalOpen(true)} 
+        onHomeClick={handleHomeClick}
+      />
       
       <div className="flex">
         <Sidebar 
@@ -142,7 +145,6 @@ const Index = () => {
           onAuthorChange={setSelectedAuthor}
           selectedTag={selectedTag}
           onTagChange={setSelectedTag}
-          onHomeClick={handleHomeClick}
         />
         
         <main className="flex-1 p-8">

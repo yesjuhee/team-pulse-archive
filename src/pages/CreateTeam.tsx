@@ -28,7 +28,7 @@ const CreateTeam = () => {
   const [newTech, setNewTech] = useState('');
   
   // 카테고리
-  const [categories, setCategories] = useState<string[]>(['스프린트 회고', '트러블 슈팅', 'Tech Archiving']);
+  const [categories, setCategories] = useState<string[]>(['스프린트 회고', '회의록', '트러블 슈팅', 'Tech Archiving']);
   const [newCategory, setNewCategory] = useState('');
   
   // 디자인 설정
@@ -249,7 +249,7 @@ const CreateTeam = () => {
                     {categories.map((category) => (
                       <Badge key={category} variant="outline" className="flex items-center gap-1">
                         {category}
-                        {!['스프린트 회고', '트러블 슈팅', 'Tech Archiving'].includes(category) && (
+                        {!['스프린트 회고', '회의록', '트러블 슈팅', 'Tech Archiving'].includes(category) && (
                           <X className="h-3 w-3 cursor-pointer" onClick={() => handleRemoveCategory(category)} />
                         )}
                       </Badge>
