@@ -366,7 +366,7 @@ const MyPage = () => {
                   ))
                 ) : (
                   <div className="text-center py-12">
-                    <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <User className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-500">참여 중인 팀이 없습니다.</p>
                     <Button className="mt-4" asChild>
                       <Link to="/create-team">팀 만들기</Link>
