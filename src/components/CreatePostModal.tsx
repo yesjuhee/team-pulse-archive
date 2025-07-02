@@ -216,6 +216,7 @@ React Hook을 효율적으로 사용하는 방법에 대한 실무 경험을 바
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="sprint">스프린트 회고</SelectItem>
+                <SelectItem value="meeting">회의록</SelectItem>
                 <SelectItem value="troubleshooting">트러블 슈팅</SelectItem>
                 <SelectItem value="tech">Tech Archiving</SelectItem>
               </SelectContent>

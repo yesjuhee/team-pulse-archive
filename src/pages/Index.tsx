@@ -7,7 +7,7 @@ import PostCard from '../components/PostCard';
 import TeamInfo from '../components/TeamInfo';
 import CreatePostModal from '../components/CreatePostModal';
 
-// Mock posts data
+// Mock posts data with tags and meeting category
 const mockPosts = [
   {
     id: '1',
@@ -17,7 +17,8 @@ const mockPosts = [
     category: 'tech',
     date: '2024.01.15',
     likes: 12,
-    comments: 5
+    comments: 5,
+    tags: ['React', 'TypeScript', '성능최적화']
   },
   {
     id: '2',
@@ -27,7 +28,8 @@ const mockPosts = [
     category: 'sprint',
     date: '2024.01.14',
     likes: 8,
-    comments: 3
+    comments: 3,
+    tags: ['Node.js', 'API', 'MongoDB']
   },
   {
     id: '3',
@@ -37,7 +39,8 @@ const mockPosts = [
     category: 'troubleshooting',
     date: '2024.01.13',
     likes: 15,
-    comments: 7
+    comments: 7,
+    tags: ['Docker', 'AWS']
   },
   {
     id: '4',
@@ -47,7 +50,8 @@ const mockPosts = [
     category: 'tech',
     date: '2024.01.12',
     likes: 20,
-    comments: 9
+    comments: 9,
+    tags: ['TypeScript', 'React']
   },
   {
     id: '5',
@@ -57,7 +61,19 @@ const mockPosts = [
     category: 'tech',
     date: '2024.01.11',
     likes: 11,
-    comments: 4
+    comments: 4,
+    tags: ['React', 'TypeScript']
+  },
+  {
+    id: '6',
+    title: '주간 개발팀 회의록 - 2024.01.15',
+    content: '이번 주 개발팀 회의에서 논의된 주요 안건들과 결정사항을 정리했습니다. API 설계 변경사항과 다음 스프린트 계획에 대해 다뤘습니다.',
+    author: '최기획',
+    category: 'meeting',
+    date: '2024.01.15',
+    likes: 5,
+    comments: 2,
+    tags: ['API', '회의록']
   }
 ];
 
@@ -65,14 +81,17 @@ const Index = () => {
   const { teamId } = useParams();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedAuthor, setSelectedAuthor] = useState('');
+  const [selectedTag, setSelectedTag] = useState('');
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const [posts, setPosts] = useState(mockPosts);
+  const [currentView, setCurrentView] = useState<'home' | 'posts'>('home');
 
-  // Filter posts based on selected category and author
+  // Filter posts based on selected category, author, and tag
   const filteredPosts = posts.filter(post => {
     const categoryMatch = selectedCategory === 'all' || post.category === selectedCategory;
     const authorMatch = !selectedAuthor || post.author === selectedAuthor;
-    return categoryMatch && authorMatch;
+    const tagMatch = !selectedTag || (post.tags && post.tags.includes(selectedTag));
+    return categoryMatch && authorMatch && tagMatch;
   });
 
   const handlePostClick = (post: any) => {
@@ -83,6 +102,34 @@ const Index = () => {
     setPosts(prev => [newPost, ...prev]);
   };
 
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setCurrentView('posts');
+  };
+
+  const handleHomeClick = () => {
+    setCurrentView('home');
+    setSelectedCategory('all');
+    setSelectedAuthor('');
+    setSelectedTag('');
+  };
+
+  const getPageTitle = () => {
+    if (currentView === 'home') return '프로젝트 대문';
+    if (selectedAuthor) return `${selectedAuthor}의 글`;
+    if (selectedTag) return `#${selectedTag} 태그`;
+    
+    const categoryName = {
+      'all': '전체 글',
+      'sprint': '스프린트 회고',
+      'meeting': '회의록',
+      'troubleshooting': '트러블 슈팅',
+      'tech': 'Tech Archiving'
+    }[selectedCategory] || '게시물';
+    
+    return categoryName;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
       <Header onCreatePost={() => setIsCreatePostModalOpen(true)} />
@@ -90,32 +137,39 @@ const Index = () => {
       <div className="flex">
         <Sidebar 
           selectedCategory={selectedCategory} 
-          onCategoryChange={setSelectedCategory}
+          onCategoryChange={handleCategoryChange}
           selectedAuthor={selectedAuthor}
           onAuthorChange={setSelectedAuthor}
+          selectedTag={selectedTag}
+          onTagChange={setSelectedTag}
+          onHomeClick={handleHomeClick}
         />
         
         <main className="flex-1 p-8">
-          <TeamInfo />
-          
-          <div className="mt-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                {selectedAuthor ? `${selectedAuthor}의 글` : '최근 게시물'}
-              </h2>
-              <p className="text-gray-600 bg-white/60 px-3 py-1 rounded-full text-sm">{filteredPosts.length}개의 글</p>
+          {currentView === 'home' ? (
+            <TeamInfo />
+          ) : (
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  {getPageTitle()}
+                </h2>
+                <p className="text-gray-600 bg-white/60 px-3 py-1 rounded-full text-sm">
+                  {filteredPosts.length}개의 글
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {filteredPosts.map((post) => (
+                  <PostCard 
+                    key={post.id} 
+                    post={post} 
+                    onClick={() => handlePostClick(post)}
+                  />
+                ))}
+              </div>
             </div>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {filteredPosts.map((post) => (
-                <PostCard 
-                  key={post.id} 
-                  post={post} 
-                  onClick={() => handlePostClick(post)}
-                />
-              ))}
-            </div>
-          </div>
+          )}
         </main>
       </div>
 
