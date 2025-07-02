@@ -1,31 +1,50 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, User, Heart, Bookmark, Edit, TrendingUp, Calendar } from 'lucide-react';
+import { ArrowLeft, User, Heart, Bookmark, Edit, TrendingUp, Calendar, Mail, Github, ExternalLink, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 import PostCard from '@/components/PostCard';
 
 const MyPage = () => {
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('my-posts');
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   // Mock user data
-  const userInfo = {
+  const [userInfo, setUserInfo] = useState({
     name: '김민준',
     email: 'kim@example.com',
     role: 'Frontend Developer',
+    bio: 'React와 TypeScript를 사용한 웹 개발을 전문으로 하는 개발자입니다. 사용자 경험을 중시하며, 깔끔하고 효율적인 코드 작성을 지향합니다.',
     joinDate: '2023.09.01',
     profileImage: null,
-  };
+    githubUrl: 'https://github.com/kimuser',
+    blogUrl: 'https://blog.kimuser.com',
+    linkedinUrl: '',
+    phone: ''
+  });
 
   const userStats = {
     totalPosts: 12,
     totalLikes: 89,
     totalComments: 45,
     totalBookmarks: 23,
+    totalTeams: 3,
+    totalViews: 567
   };
+
+  const myTeams = [
+    { id: '1', name: '스마트 시티 플랫폼', role: 'Frontend Developer', posts: 8, status: 'active' },
+    { id: '2', name: 'E-commerce 프로젝트', role: 'Frontend Developer', posts: 3, status: 'active' },
+    { id: '3', name: '모바일 앱 개발', role: 'React Native Developer', posts: 1, status: 'completed' }
+  ];
 
   // Mock posts data
   const myPosts = [
@@ -104,6 +123,15 @@ const MyPage = () => {
     }
   };
 
+  const handleSaveProfile = () => {
+    setIsEditingProfile(false);
+    toast({
+      title: "프로필이 업데이트되었습니다",
+      description: "변경사항이 성공적으로 저장되었습니다.",
+      duration: 3000,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -126,70 +154,177 @@ const MyPage = () => {
         {/* User Profile */}
         <Card className="mb-8">
           <CardContent className="p-6">
-            <div className="flex items-center gap-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                {userInfo.name.charAt(0)}
+            <div className="flex items-start gap-6">
+              <div className="relative">
+                <div className="w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                  {userInfo.name.charAt(0)}
+                </div>
+                <Button size="sm" variant="ghost" className="absolute -bottom-2 -right-2 p-1 h-8 w-8 rounded-full bg-white border shadow-sm">
+                  <Camera className="h-3 w-3" />
+                </Button>
               </div>
               <div className="flex-1">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">{userInfo.name}</h2>
-                <p className="text-gray-600 mb-1">{userInfo.role}</p>
-                <p className="text-sm text-gray-500">{userInfo.email}</p>
-                <p className="text-sm text-gray-500">가입일: {userInfo.joinDate}</p>
+                <div className="flex items-center gap-4 mb-4">
+                  <h2 className="text-3xl font-bold text-gray-900">{userInfo.name}</h2>
+                  <Dialog open={isEditingProfile} onOpenChange={setIsEditingProfile}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        <Edit className="h-4 w-4 mr-2" />
+                        프로필 편집
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>프로필 편집</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">이름</label>
+                            <Input
+                              value={userInfo.name}
+                              onChange={(e) => setUserInfo({...userInfo, name: e.target.value})}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">역할</label>
+                            <Input
+                              value={userInfo.role}
+                              onChange={(e) => setUserInfo({...userInfo, role: e.target.value})}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">소개</label>
+                          <Textarea
+                            value={userInfo.bio}
+                            onChange={(e) => setUserInfo({...userInfo, bio: e.target.value})}
+                            rows={3}
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">GitHub URL</label>
+                            <Input
+                              value={userInfo.githubUrl}
+                              onChange={(e) => setUserInfo({...userInfo, githubUrl: e.target.value})}
+                              placeholder="https://github.com/username"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">블로그 URL</label>
+                            <Input
+                              value={userInfo.blogUrl}
+                              onChange={(e) => setUserInfo({...userInfo, blogUrl: e.target.value})}
+                              placeholder="https://blog.example.com"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex justify-end gap-2">
+                          <Button variant="outline" onClick={() => setIsEditingProfile(false)}>
+                            취소
+                          </Button>
+                          <Button onClick={handleSaveProfile}>
+                            저장
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+                
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <User className="h-4 w-4" />
+                    <span>{userInfo.role}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Mail className="h-4 w-4" />
+                    <span>{userInfo.email}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Calendar className="h-4 w-4" />
+                    <span>가입일: {userInfo.joinDate}</span>
+                  </div>
+                </div>
+
+                <p className="text-gray-700 mb-4">{userInfo.bio}</p>
+
+                <div className="flex items-center gap-4">
+                  {userInfo.githubUrl && (
+                    <Button variant="ghost" size="sm" asChild>
+                      <a href={userInfo.githubUrl} target="_blank" rel="noopener noreferrer">
+                        <Github className="h-4 w-4 mr-2" />
+                        GitHub
+                      </a>
+                    </Button>
+                  )}
+                  {userInfo.blogUrl && (
+                    <Button variant="ghost" size="sm" asChild>
+                      <a href={userInfo.blogUrl} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        블로그
+                      </a>
+                    </Button>
+                  )}
+                </div>
               </div>
-              <Button variant="outline">
-                <Edit className="h-4 w-4 mr-2" />
-                프로필 편집
-              </Button>
             </div>
           </CardContent>
         </Card>
 
         {/* User Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">작성한 글</p>
-                  <p className="text-2xl font-bold text-gray-900">{userStats.totalPosts}</p>
-                </div>
-                <Edit className="h-8 w-8 text-blue-500" />
+            <CardContent className="p-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{userStats.totalTeams}</p>
+                <p className="text-sm text-gray-600">참여 팀</p>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">받은 좋아요</p>
-                  <p className="text-2xl font-bold text-gray-900">{userStats.totalLikes}</p>
-                </div>
-                <Heart className="h-8 w-8 text-red-500" />
+            <CardContent className="p-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{userStats.totalPosts}</p>
+                <p className="text-sm text-gray-600">작성한 글</p>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">작성한 댓글</p>
-                  <p className="text-2xl font-bold text-gray-900">{userStats.totalComments}</p>
-                </div>
-                <TrendingUp className="h-8 w-8 text-green-500" />
+            <CardContent className="p-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{userStats.totalViews}</p>
+                <p className="text-sm text-gray-600">총 조회수</p>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">북마크</p>
-                  <p className="text-2xl font-bold text-gray-900">{userStats.totalBookmarks}</p>
-                </div>
-                <Bookmark className="h-8 w-8 text-purple-500" />
+            <CardContent className="p-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{userStats.totalLikes}</p>
+                <p className="text-sm text-gray-600">받은 좋아요</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{userStats.totalComments}</p>
+                <p className="text-sm text-gray-600">작성한 댓글</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{userStats.totalBookmarks}</p>
+                <p className="text-sm text-gray-600">북마크</p>
               </div>
             </CardContent>
           </Card>
@@ -199,7 +334,8 @@ const MyPage = () => {
         <Card>
           <CardHeader>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="my-teams">내 팀 목록</TabsTrigger>
                 <TabsTrigger value="my-posts">내가 쓴 글</TabsTrigger>
                 <TabsTrigger value="liked-posts">좋아요 한 글</TabsTrigger>
                 <TabsTrigger value="bookmarked-posts">북마크 한 글</TabsTrigger>
@@ -208,6 +344,37 @@ const MyPage = () => {
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsContent value="my-teams" className="space-y-4">
+                {myTeams.length > 0 ? (
+                  myTeams.map((team) => (
+                    <div key={team.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+                      <div className="flex-1">
+                        <h4 className="font-medium text-gray-900">{team.name}</h4>
+                        <p className="text-sm text-gray-500">{team.role} • {team.posts}개 글 작성</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={team.status === 'active' ? 'default' : 'secondary'}>
+                          {team.status === 'active' ? '활동중' : '완료'}
+                        </Badge>
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link to={`/team/${team.id}`}>
+                            <ExternalLink className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500">참여 중인 팀이 없습니다.</p>
+                    <Button className="mt-4" asChild>
+                      <Link to="/create-team">팀 만들기</Link>
+                    </Button>
+                  </div>
+                )}
+              </TabsContent>
+
               <TabsContent value="my-posts" className="space-y-6">
                 {myPosts.length > 0 ? (
                   myPosts.map((post) => (

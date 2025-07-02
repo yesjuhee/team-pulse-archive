@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
-import { Search, TrendingUp, Users, ExternalLink, ArrowRight } from 'lucide-react';
+import { Search, TrendingUp, Users, ExternalLink, ArrowRight, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Link } from 'react-router-dom';
 
 // Mock data for team blogs
@@ -51,7 +52,8 @@ const popularPosts = [
     team: '스마트 시티 플랫폼',
     views: 1234,
     likes: 89,
-    date: '2024.01.20'
+    date: '2024.01.20',
+    category: 'Tech Archiving'
   },
   {
     id: '2',
@@ -61,7 +63,8 @@ const popularPosts = [
     team: 'E-commerce 분석 대시보드',
     views: 987,
     likes: 76,
-    date: '2024.01.18'
+    date: '2024.01.18',
+    category: 'Trouble Shooting'
   },
   {
     id: '3',
@@ -71,12 +74,48 @@ const popularPosts = [
     team: '헬스케어 모니터링 앱',
     views: 756,
     likes: 65,
-    date: '2024.01.22'
+    date: '2024.01.22',
+    category: '스프린트 회고'
   }
 ];
 
 const Landing = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchFilter, setSearchFilter] = useState('all');
+  const [filteredBlogs, setFilteredBlogs] = useState(teamBlogs);
+
+  const handleSearch = () => {
+    if (!searchQuery.trim()) {
+      setFilteredBlogs(teamBlogs);
+      return;
+    }
+
+    const filtered = teamBlogs.filter(blog => {
+      const searchTerm = searchQuery.toLowerCase();
+      
+      switch (searchFilter) {
+        case 'name':
+          return blog.name.toLowerCase().includes(searchTerm);
+        case 'tech':
+          return blog.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+        case 'all':
+        default:
+          return (
+            blog.name.toLowerCase().includes(searchTerm) ||
+            blog.description.toLowerCase().includes(searchTerm) ||
+            blog.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+          );
+      }
+    });
+    
+    setFilteredBlogs(filtered);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -88,9 +127,14 @@ const Landing = () => {
               <h1 className="text-2xl font-bold text-blue-600">TeamLog</h1>
               <span className="ml-2 text-sm text-gray-500">팀 프로젝트 아카이브</span>
             </div>
-            <Button variant="outline" asChild>
-              <Link to="/create-team">팀 블로그 만들기</Link>
-            </Button>
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" asChild>
+                <Link to="/mypage">마이페이지</Link>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link to="/create-team">팀 블로그 만들기</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -107,17 +151,34 @@ const Landing = () => {
             포트폴리오부터 팀 문화까지, 모든 것을 하나의 플랫폼에서 관리할 수 있습니다.
           </p>
           
-          {/* Search */}
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <Input
-                type="text"
-                placeholder="프로젝트명, 기술스택, 팀명으로 검색해보세요..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 pr-4 py-4 text-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-              />
+          {/* Enhanced Search */}
+          <div className="max-w-4xl mx-auto mb-8">
+            <div className="flex gap-2 mb-4">
+              <Select value={searchFilter} onValueChange={setSearchFilter}>
+                <SelectTrigger className="w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">전체 검색</SelectItem>
+                  <SelectItem value="name">팀명으로</SelectItem>
+                  <SelectItem value="tech">기술스택으로</SelectItem>
+                </SelectContent>
+              </Select>
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <Input
+                  type="text"
+                  placeholder="프로젝트명, 기술스택, 팀명으로 검색해보세요..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  className="pl-12 pr-4 py-4 text-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+              <Button onClick={handleSearch} size="lg">
+                <Search className="h-4 w-4 mr-2" />
+                검색
+              </Button>
             </div>
           </div>
         </div>
@@ -141,7 +202,10 @@ const Landing = () => {
               <Card key={post.id} className="hover:shadow-lg transition-shadow cursor-pointer">
                 <CardHeader>
                   <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
-                    <span>{post.team}</span>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary">{post.category}</Badge>
+                      <span>{post.team}</span>
+                    </div>
                     <span>{post.date}</span>
                   </div>
                   <CardTitle className="text-lg line-clamp-2">{post.title}</CardTitle>
@@ -167,11 +231,27 @@ const Landing = () => {
             <div className="flex items-center gap-3">
               <Users className="h-6 w-6 text-blue-500" />
               <h2 className="text-3xl font-bold text-gray-900">팀 블로그 둘러보기</h2>
+              {searchQuery && (
+                <Badge variant="outline">
+                  "{searchQuery}" 검색 결과 {filteredBlogs.length}개
+                </Badge>
+              )}
             </div>
+            {searchQuery && (
+              <Button 
+                variant="ghost" 
+                onClick={() => {
+                  setSearchQuery('');
+                  setFilteredBlogs(teamBlogs);
+                }}
+              >
+                전체 보기
+              </Button>
+            )}
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamBlogs.map((blog) => (
+            {filteredBlogs.map((blog) => (
               <Card key={blog.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 group">
                 <div className="aspect-video overflow-hidden">
                   <img 
@@ -212,6 +292,14 @@ const Landing = () => {
               </Card>
             ))}
           </div>
+
+          {filteredBlogs.length === 0 && searchQuery && (
+            <div className="text-center py-12">
+              <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-500 mb-2">검색 결과가 없습니다.</p>
+              <p className="text-sm text-gray-400">다른 키워드로 검색해보세요.</p>
+            </div>
+          )}
         </section>
       </div>
     </div>

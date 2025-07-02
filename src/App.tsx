@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import PostDetail from "./pages/PostDetail";
 import CreateTeam from "./pages/CreateTeam";
 import TeamManagement from "./pages/TeamManagement";
+import TeamSettings from "./pages/TeamSettings";
 import MyPage from "./pages/MyPage";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/post/:id" element={<PostDetail />} />
           <Route path="/create-team" element={<CreateTeam />} />
           <Route path="/team/:teamId/manage" element={<TeamManagement />} />
+          <Route path="/team/:teamId/settings" element={<TeamSettings />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
