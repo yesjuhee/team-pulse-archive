@@ -16,27 +16,32 @@ const teamData = {
     { 
       name: '김개발', 
       role: 'Frontend Developer',
-      avatar: 'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=400&h=400&fit=crop'
+      avatar: 'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=400&h=400&fit=crop',
+      intro: 'React와 TypeScript로 사용자 친화적인 UI를 만드는 것을 좋아합니다. 성능 최적화에 관심이 많아요.'
     },
     { 
       name: '이백엔드', 
       role: 'Backend Developer',
-      avatar: 'https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=400&h=400&fit=crop'
+      avatar: 'https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=400&h=400&fit=crop',
+      intro: 'Node.js와 PostgreSQL로 안정적인 서버를 구축합니다. 클린 아키텍처를 추구해요.'
     },
     { 
       name: '박인프라', 
       role: 'DevOps Engineer',
-      avatar: 'https://images.unsplash.com/photo-1501286353178-1ec881214838?w=400&h=400&fit=crop'
+      avatar: 'https://images.unsplash.com/photo-1501286353178-1ec881214838?w=400&h=400&fit=crop',
+      intro: 'Docker와 AWS를 활용한 자동화된 배포 시스템을 구축합니다. CI/CD 파이프라인 전문가예요.'
     },
     { 
       name: '정디자인', 
       role: 'UI/UX Designer',
-      avatar: 'https://images.unsplash.com/photo-1485833077593-4278bba3f11f?w=400&h=400&fit=crop'
+      avatar: 'https://images.unsplash.com/photo-1485833077593-4278bba3f11f?w=400&h=400&fit=crop',
+      intro: '사용자 중심의 디자인을 추구합니다. 데이터 시각화와 인터랙션 디자인에 특화되어 있어요.'
     },
     { 
       name: '최기획', 
       role: 'Project Manager',
-      avatar: null
+      avatar: null,
+      intro: '팀의 소통과 일정 관리를 담당합니다. 애자일 방법론으로 효율적인 프로젝트 진행을 이끌어요.'
     },
   ],
   techStack: ['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'AWS', 'IoT', 'AI/ML'],
@@ -81,7 +86,7 @@ const TeamInfo = () => {
         </div>
 
         {/* Tech Stack */}
-        <div className="mb-6">
+        <div className="mb-8">
           <h3 className="text-lg font-semibold text-gray-900 mb-3">기술 스택</h3>
           <div className="flex flex-wrap gap-2">
             {teamData.techStack.map((tech) => (
@@ -92,23 +97,30 @@ const TeamInfo = () => {
           </div>
         </div>
 
-        {/* Team Members */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">팀원</h3>
-          <div className="flex flex-wrap gap-4">
+        {/* Team Members - Enhanced Layout */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">팀원</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {teamData.members.map((member) => (
-              <div key={member.name} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <Avatar className="w-10 h-10">
+              <div key={member.name} className="flex gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <Avatar className="w-16 h-16 flex-shrink-0">
                   {member.avatar ? (
                     <AvatarImage src={member.avatar} alt={member.name} />
                   ) : null}
-                  <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white font-semibold">
+                  <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white font-semibold text-lg">
                     {member.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <p className="font-medium text-gray-900">{member.name}</p>
-                  <p className="text-sm text-gray-500">{member.role}</p>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="font-semibold text-gray-900 text-lg">{member.name}</p>
+                    <Badge variant="outline" className="text-xs">
+                      {member.role}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {member.intro}
+                  </p>
                 </div>
               </div>
             ))}
