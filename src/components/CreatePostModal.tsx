@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { X, Save, Eye, Bold, Italic, Link as LinkIcon, List, ListOrdered, Code, Image, Quote, Heading1, Heading2, Heading3, Heading4 } from 'lucide-react';
+import { X, Save, Eye, Bold, Italic, Link as LinkIcon, List, ListOrdered, Code, Image, Quote, Heading1, Heading2, Heading3, Heading4, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -64,17 +64,30 @@ const CreatePostModal = ({ isOpen, onClose, onSave }: CreatePostModalProps) => {
     setIsLoading(true);
     // Mock AI/크롤링 기능 - 프로토타입용
     setTimeout(() => {
-      setTitle('React Hook 최적화 방법');
-      setContent(`# React Hook 최적화 방법
+      setTitle('React Hook 최적화 완벽 가이드');
+      setContent(`# React Hook 최적화 완벽 가이드
 
-외부 블로그에서 가져온 내용입니다.
+이 글은 [원본 블로그 글](${externalUrl})에서 가져온 내용입니다.
 
-## 주요 내용
-- useState 최적화
-- useEffect 의존성 관리
-- useMemo와 useCallback 활용
+## 핵심 요약
 
-이 글은 [외부 링크](${externalUrl})에서 확인하실 수 있습니다.`);
+React Hook을 효율적으로 사용하는 방법에 대한 실무 경험을 바탕으로 한 가이드입니다.
+
+### 주요 내용
+- **useState 최적화**: 불필요한 리렌더링 방지 방법
+- **useEffect 의존성 관리**: 메모리 누수 예방과 성능 개선
+- **useMemo와 useCallback**: 언제 사용해야 하는지에 대한 실전 팁
+- **커스텀 훅 설계**: 재사용 가능한 로직 분리 전략
+
+### 실제 적용 사례
+프로젝트에서 직접 경험한 성능 개선 사례와 함께 구체적인 코드 예시를 제공합니다.
+
+---
+
+**더 자세한 내용은 [원본 글 보기](${externalUrl})에서 확인하실 수 있습니다.**
+
+> 💡 **팀 내 토론 포인트**  
+> 이 최적화 기법들 중에서 우리 프로젝트에 바로 적용해볼 만한 것들이 있을까요? 특히 성능 이슈가 있었던 컴포넌트들에 대해 함께 논의해보면 좋을 것 같습니다.`);
       setIsLoading(false);
     }, 2000);
   };
@@ -175,7 +188,7 @@ const CreatePostModal = ({ isOpen, onClose, onSave }: CreatePostModalProps) => {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white">
         <div className="flex items-center gap-6">
-          <h1 className="text-xl font-bold text-gray-900">제목을 입력하세요</h1>
+          <h1 className="text-xl font-bold text-gray-900">새 글 작성</h1>
           <div className="flex gap-2">
             <Badge
               variant={postType === 'content' ? 'default' : 'outline'}
@@ -189,8 +202,8 @@ const CreatePostModal = ({ isOpen, onClose, onSave }: CreatePostModalProps) => {
               className="cursor-pointer"
               onClick={() => setPostType('link')}
             >
-              <LinkIcon className="h-3 w-3 mr-1" />
-              외부 링크
+              <ExternalLink className="h-3 w-3 mr-1" />
+              외부 글 가져오기
             </Badge>
           </div>
         </div>
@@ -252,7 +265,7 @@ const CreatePostModal = ({ isOpen, onClose, onSave }: CreatePostModalProps) => {
       {/* External URL (if applicable) */}
       {postType === 'link' && (
         <div className="p-4 border-b border-gray-100 bg-blue-50">
-          <div className="flex gap-2">
+          <div className="flex gap-2 mb-3">
             <Input
               value={externalUrl}
               onChange={(e) => setExternalUrl(e.target.value)}
@@ -264,12 +277,21 @@ const CreatePostModal = ({ isOpen, onClose, onSave }: CreatePostModalProps) => {
               disabled={!externalUrl || isLoading}
               variant="outline"
             >
-              {isLoading ? '가져오는 중...' : '내용 가져오기'}
+              {isLoading ? '분석 중...' : 'AI로 내용 가져오기'}
             </Button>
           </div>
-          <p className="text-sm text-blue-600 mt-2">
-            외부 링크의 내용을 자동으로 가져와서 팀 블로그에서도 토론할 수 있도록 합니다.
-          </p>
+          <div className="text-sm text-blue-700 bg-blue-100 p-3 rounded-lg">
+            <div className="flex items-start gap-2">
+              <ExternalLink className="h-4 w-4 mt-0.5 text-blue-600" />
+              <div>
+                <p className="font-medium mb-1">외부 글 가져오기 기능</p>
+                <p className="text-blue-600">
+                  AI가 외부 블로그 글을 분석해서 제목과 핵심 내용을 자동으로 요약해드립니다. 
+                  생성된 글에는 원본 링크가 포함되어 팀원들이 전체 내용을 쉽게 확인할 수 있습니다.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
@@ -358,14 +380,24 @@ const CreatePostModal = ({ isOpen, onClose, onSave }: CreatePostModalProps) => {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder={postType === 'link' 
-                  ? "외부 글에 대한 설명이나 팀 내 토론 포인트를 작성해주세요..." 
-                  : `# 여기에 작성
+                  ? "AI가 생성한 내용을 확인하고 팀 내 토론 포인트나 추가 설명을 작성해주세요..." 
+                  : `# 여기에 제목을 작성하세요
 
-### 여기에 내용
-○○
+## 주요 내용
 
-- 1
-- 2`}
+여기에 내용을 작성하세요.
+
+### 세부 사항
+- 항목 1
+- 항목 2
+- 항목 3
+
+\`\`\`javascript
+// 코드 예시
+console.log('Hello World');
+\`\`\`
+
+> 인용문이나 중요한 내용`}
                 className="flex-1 border-none shadow-none resize-none rounded-none focus-visible:ring-0 font-mono text-sm"
                 style={{ minHeight: '100%' }}
               />
