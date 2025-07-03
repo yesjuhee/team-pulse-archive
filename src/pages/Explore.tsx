@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Search, TrendingUp, Users, ExternalLink, ArrowDown, Bell, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -470,7 +471,7 @@ const Explore = () => {
                 )}
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
                 {filteredBlogs.map((blog) => (
                   <Link key={blog.id} to={`/team/${blog.id}?view=home`}>
                     <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer h-[400px] flex flex-col">
@@ -509,6 +510,14 @@ const Explore = () => {
                     </Card>
                   </Link>
                 ))}
+              </div>
+
+              {/* 무한스크롤 표시 추가 */}
+              <div className="text-center py-8">
+                <div className="flex flex-col items-center gap-2">
+                  <ArrowDown className="h-6 w-6 text-gray-400 animate-bounce" />
+                  <p className="text-gray-500 font-medium">무한스크롤</p>
+                </div>
               </div>
 
               {filteredBlogs.length === 0 && searchQuery && (

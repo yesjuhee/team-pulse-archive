@@ -7,7 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Save, X, Plus, Eye, Edit3 } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Save, X, Plus, Eye, Edit3, Link, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -26,6 +27,16 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
   const [isDraft, setIsDraft] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [activeTab, setActiveTab] = useState('direct');
+  
+  // 외부 링크 관련 상태
+  const [externalUrl, setExternalUrl] = useState('');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<{
+    title: string;
+    summary: string;
+    suggestedTags: string[];
+  } | null>(null);
 
   // 자동 저장 기능 (목업)
   useEffect(() => {
@@ -50,6 +61,30 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
+  const handleAIAnalysis = async () => {
+    if (!externalUrl.trim()) {
+      alert('링크 URL을 입력해주세요.');
+      return;
+    }
+
+    setIsAnalyzing(true);
+    
+    // 목업 분석 결과 (2초 후 표시)
+    setTimeout(() => {
+      const mockResult = {
+        title: 'React Query와 Zustand를 활용한 상태 관리 패턴',
+        summary: '복잡한 상태 관리 문제를 해결하기 위한 React Query와 Zustand 조합 사용법에 대한 실전 가이드입니다. 서버 상태와 클라이언트 상태를 효율적으로 분리하여 관리하는 방법과 성능 최적화 기법을 다룹니다.',
+        suggestedTags: ['React', 'TypeScript', 'React Query', 'Zustand']
+      };
+      
+      setAnalysisResult(mockResult);
+      setTitle(mockResult.title);
+      setContent(mockResult.summary);
+      setTags(mockResult.suggestedTags);
+      setIsAnalyzing(false);
+    }, 2000);
+  };
+
   const handleSave = () => {
     if (!title.trim() || !content.trim()) {
       alert('제목과 내용을 입력해주세요.');
@@ -67,7 +102,8 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
       comments: 0,
       tags: tags,
       visibility,
-      isDraft
+      isDraft,
+      externalUrl: activeTab === 'external' ? externalUrl : undefined
     };
 
     onSave(newPost);
@@ -88,6 +124,64 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* 탭 메뉴 */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="direct" className="flex items-center gap-2">
+                <Edit3 className="h-4 w-4" />
+                직접 작성
+              </TabsTrigger>
+              <TabsTrigger value="external" className="flex items-center gap-2">
+                <Link className="h-4 w-4" />
+                외부 링크
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="external" className="space-y-4">
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <Link className="h-5 w-5 text-blue-600" />
+                  <h3 className="font-semibold text-blue-900">외부 링크로 글 작성</h3>
+                </div>
+                <p className="text-sm text-blue-700 mb-4">
+                  외부 블로그나 아티클 링크를 입력하면 AI가 자동으로 제목과 요약을 생성해드립니다.
+                </p>
+                
+                <div className="flex gap-2">
+                  <Input
+                    value={externalUrl}
+                    onChange={(e) => setExternalUrl(e.target.value)}
+                    placeholder="https://your-blog.com/post-url"
+                    className="flex-1"
+                  />
+                  <Button 
+                    onClick={handleAIAnalysis}
+                    disabled={isAnalyzing}
+                    className="flex items-center gap-2"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    {isAnalyzing ? '분석 중...' : 'AI 분석'}
+                  </Button>
+                </div>
+
+                {analysisResult && (
+                  <div className="mt-4 p-3 bg-white rounded border">
+                    <div className="text-sm text-green-600 mb-2">✓ 분석 완료</div>
+                    <div className="text-sm text-gray-600">
+                      제목과 요약이 자동으로 입력되었습니다. 필요시 수정하세요.
+                    </div>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="direct">
+              <div className="text-sm text-gray-600 p-3 bg-gray-50 rounded-lg">
+                마크다운 형식으로 직접 글을 작성할 수 있습니다.
+              </div>
+            </TabsContent>
+          </Tabs>
+
           {/* 메타데이터 설정 */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
             <div className="space-y-2">
