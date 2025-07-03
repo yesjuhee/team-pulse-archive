@@ -1,6 +1,5 @@
-
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import PostCard from '../components/PostCard';
@@ -79,12 +78,21 @@ const mockPosts = [
 
 const Index = () => {
   const { teamId } = useParams();
+  const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedAuthor, setSelectedAuthor] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const [posts, setPosts] = useState(mockPosts);
   const [currentView, setCurrentView] = useState<'home' | 'posts'>('posts');
+
+  // Check URL query parameter for view
+  useEffect(() => {
+    const viewParam = searchParams.get('view');
+    if (viewParam === 'home') {
+      setCurrentView('home');
+    }
+  }, [searchParams]);
 
   // Filter posts based on selected category, author, and tag
   const filteredPosts = posts.filter(post => {

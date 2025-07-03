@@ -322,7 +322,7 @@ const Landing = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredBlogs.map((blog) => (
-                <Link key={blog.id} to={`/team/${blog.id}`}>
+                <Link key={blog.id} to={`/team/${blog.id}?view=home`}>
                   <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer">
                     <div className="aspect-video overflow-hidden">
                       <img 
