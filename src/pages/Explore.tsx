@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Search, TrendingUp, Users, ExternalLink, ArrowRight, Bell, User } from 'lucide-react';
+import { Search, TrendingUp, Users, ExternalLink, ArrowDown, Bell, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -102,7 +103,7 @@ const teamBlogs = [
   }
 ];
 
-// Mock data for popular posts (확장된 데이터)
+// Mock data for popular posts (확장된 데이터 15개)
 const popularPosts = [
   {
     id: '1',
@@ -223,15 +224,76 @@ const popularPosts = [
     likes: 39,
     date: '2024.01.22',
     category: 'Tech Archiving'
+  },
+  {
+    id: '11',
+    title: 'Kubernetes 클러스터 운영 경험담',
+    excerpt: '프로덕션 환경에서 Kubernetes 클러스터를 운영하며 겪은 트러블슈팅',
+    author: '이인프라',
+    team: '클라우드 네이티브 플랫폼',
+    teamId: 'cloud-native',
+    views: 678,
+    likes: 45,
+    date: '2024.01.26',
+    category: 'Trouble Shooting'
+  },
+  {
+    id: '12',
+    title: 'Vue 3 Composition API 마이그레이션 가이드',
+    excerpt: 'Vue 2에서 Vue 3로 마이그레이션하며 Composition API 도입 경험',
+    author: '김프론트',
+    team: '웹 포털 서비스',
+    teamId: 'web-portal',
+    views: 432,
+    likes: 31,
+    date: '2024.01.25',
+    category: 'Tech Archiving'
+  },
+  {
+    id: '13',
+    title: '실시간 채팅 서비스 아키텍처 설계',
+    excerpt: 'Socket.io와 Redis를 활용한 확장 가능한 실시간 채팅 시스템',
+    author: '정백엔드',
+    team: '커뮤니케이션 플랫폼',
+    teamId: 'communication',
+    views: 823,
+    likes: 67,
+    date: '2024.01.24',
+    category: 'Tech Archiving'
+  },
+  {
+    id: '14',
+    title: '테스트 자동화 도입으로 개발 속도 2배 향상',
+    excerpt: 'Jest, Cypress를 활용한 테스트 자동화 구축과 CI/CD 파이프라인 개선',
+    author: '최QA',
+    team: '품질관리팀',
+    teamId: 'qa-team',
+    views: 756,
+    likes: 58,
+    date: '2024.01.23',
+    category: '스프린트 회고'
+  },
+  {
+    id: '15',
+    title: 'AWS 비용 최적화를 통한 월 50% 절약',
+    excerpt: 'Reserved Instance, Spot Instance 활용한 AWS 인프라 비용 최적화',
+    author: '박클라우드',
+    team: '인프라 운영팀',
+    teamId: 'infra-ops',
+    views: 945,
+    likes: 73,
+    date: '2024.01.22',
+    category: 'Trouble Shooting'
   }
 ];
 
 const Explore = () => {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, login } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFilter, setSearchFilter] = useState('all');
   const [filteredBlogs, setFilteredBlogs] = useState(teamBlogs);
   const [filteredPosts, setFilteredPosts] = useState(popularPosts);
+  const [activeTab, setActiveTab] = useState('team-blogs');
 
   const handleSearch = () => {
     if (!searchQuery.trim()) {
@@ -311,6 +373,11 @@ const Explore = () => {
     setFilteredPosts(popularPosts);
   };
 
+  const handleExploreLogin = () => {
+    login();
+    // /explore 페이지에서 헤더만 로그인 상태로 변경
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -333,12 +400,12 @@ const Explore = () => {
                     </Link>
                   </Button>
                   <Button variant="ghost" size="sm" onClick={logout}>
-                    로그아웃
+                    👋 로그아웃
                   </Button>
                 </>
               ) : (
-                <Button variant="outline" asChild>
-                  <Link to="/">로그인하기</Link>
+                <Button variant="outline" onClick={handleExploreLogin}>
+                  로그인하기
                 </Button>
               )}
             </div>
@@ -385,139 +452,134 @@ const Explore = () => {
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Popular Posts Section */}
-        {(!searchQuery || searchFilter === 'all' || searchFilter === 'post' || searchFilter === 'author') && (
-          <section className="mb-16">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-3">
-                <TrendingUp className="h-6 w-6 text-orange-500" />
-                <h2 className="text-3xl font-bold text-gray-900">
-                  {searchQuery ? '검색된 아티클' : '인기 아티클'}
-                </h2>
-                {searchQuery && (
-                  <Badge variant="outline">
-                    "{searchQuery}" 검색 결과 {filteredPosts.length}개
-                  </Badge>
-                )}
-              </div>
-              {!searchQuery && (
-                <Button variant="ghost" className="text-blue-600">
-                  더 보기 <ArrowRight className="h-4 w-4 ml-1" />
-                </Button>
-              )}
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPosts.map((post) => (
-                <Link key={post.id} to={`/post/${post.id}`}>
-                  <Card className="hover:shadow-lg transition-shadow cursor-pointer h-64 flex flex-col">
-                    <CardHeader className="flex-1">
-                      <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="secondary">{post.category}</Badge>
-                          <span>{post.team}</span>
-                        </div>
-                        <span>{post.date}</span>
-                      </div>
-                      <CardTitle className="text-lg line-clamp-2">{post.title}</CardTitle>
-                      <CardDescription className="line-clamp-2">{post.excerpt}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-700">{post.author}</span>
-                        <div className="flex items-center gap-4 text-sm text-gray-500">
-                          <span>👀 {post.views.toLocaleString()}</span>
-                          <span>❤️ {post.likes}</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsTrigger value="team-blogs">인기 블로그</TabsTrigger>
+            <TabsTrigger value="popular-articles">인기 아티클</TabsTrigger>
+          </TabsList>
 
-            {filteredPosts.length === 0 && searchQuery && (
-              <div className="text-center py-12">
-                <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500 mb-2">검색된 아티클이 없습니다.</p>
-                <p className="text-sm text-gray-400">다른 키워드로 검색해보세요.</p>
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* Team Blogs Section */}
-        {(!searchQuery || searchFilter === 'all' || searchFilter === 'team') && (
-          <section>
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-3">
+          <TabsContent value="team-blogs">
+            <section>
+              <div className="flex items-center gap-3 mb-8">
                 <Users className="h-6 w-6 text-blue-500" />
-                <h2 className="text-3xl font-bold text-gray-900">
-                  {searchQuery ? '검색된 팀 블로그' : '팀 블로그 둘러보기'}
-                </h2>
+                <h2 className="text-3xl font-bold text-gray-900">인기 블로그</h2>
                 {searchQuery && (
                   <Badge variant="outline">
                     "{searchQuery}" 검색 결과 {filteredBlogs.length}개
                   </Badge>
                 )}
               </div>
-              {searchQuery && (
-                <Button variant="ghost" onClick={clearSearch}>
-                  전체 보기
-                </Button>
-              )}
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredBlogs.map((blog) => (
-                <Link key={blog.id} to={`/team/${blog.id}?view=home`}>
-                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer h-96 flex flex-col">
-                    <div className="aspect-video overflow-hidden">
-                      <img 
-                        src={blog.image} 
-                        alt={blog.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                    <CardHeader className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <CardTitle className="text-xl">{blog.name}</CardTitle>
-                        <ExternalLink className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredBlogs.map((blog) => (
+                  <Link key={blog.id} to={`/team/${blog.id}?view=home`}>
+                    <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer h-[400px] flex flex-col">
+                      <div className="aspect-video overflow-hidden">
+                        <img 
+                          src={blog.image} 
+                          alt={blog.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
                       </div>
-                      <CardDescription className="text-gray-600 line-clamp-2">
-                        {blog.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {blog.tags.map((tag) => (
-                          <Badge key={tag} variant="secondary" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                      <div className="flex items-center justify-between text-sm text-gray-500">
-                        <div className="flex items-center gap-4">
-                          <span>👥 {blog.members}명</span>
-                          <span>📝 {blog.posts}개 글</span>
+                      <CardHeader className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <CardTitle className="text-xl">{blog.name}</CardTitle>
+                          <ExternalLink className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
                         </div>
-                        <span>{blog.lastUpdate}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-
-            {filteredBlogs.length === 0 && searchQuery && (
-              <div className="text-center py-12">
-                <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500 mb-2">검색된 팀 블로그가 없습니다.</p>
-                <p className="text-sm text-gray-400">다른 키워드로 검색해보세요.</p>
+                        <CardDescription className="text-gray-600 line-clamp-2">
+                          {blog.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {blog.tags.map((tag) => (
+                            <Badge key={tag} variant="secondary" className="text-xs">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="flex items-center justify-between text-sm text-gray-500">
+                          <div className="flex items-center gap-4">
+                            <span>👥 {blog.members}명</span>
+                            <span>📝 {blog.posts}개 글</span>
+                          </div>
+                          <span>{blog.lastUpdate}</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
               </div>
-            )}
-          </section>
-        )}
+
+              {filteredBlogs.length === 0 && searchQuery && (
+                <div className="text-center py-12">
+                  <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500 mb-2">검색된 팀 블로그가 없습니다.</p>
+                  <p className="text-sm text-gray-400">다른 키워드로 검색해보세요.</p>
+                </div>
+              )}
+            </section>
+          </TabsContent>
+
+          <TabsContent value="popular-articles">
+            <section>
+              <div className="flex items-center gap-3 mb-8">
+                <TrendingUp className="h-6 w-6 text-orange-500" />
+                <h2 className="text-3xl font-bold text-gray-900">인기 아티클</h2>
+                {searchQuery && (
+                  <Badge variant="outline">
+                    "{searchQuery}" 검색 결과 {filteredPosts.length}개
+                  </Badge>
+                )}
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {filteredPosts.map((post) => (
+                  <Link key={post.id} to={`/post/${post.id}`}>
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer h-[280px] flex flex-col">
+                      <CardHeader className="flex-1">
+                        <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary">{post.category}</Badge>
+                            <span>{post.team}</span>
+                          </div>
+                          <span>{post.date}</span>
+                        </div>
+                        <CardTitle className="text-lg line-clamp-2">{post.title}</CardTitle>
+                        <CardDescription className="line-clamp-2">{post.excerpt}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-700">{post.author}</span>
+                          <div className="flex items-center gap-4 text-sm text-gray-500">
+                            <span>👀 {post.views.toLocaleString()}</span>
+                            <span>❤️ {post.likes}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+
+              {/* 무한스크롤 표시 */}
+              <div className="text-center py-8">
+                <div className="flex flex-col items-center gap-2">
+                  <ArrowDown className="h-6 w-6 text-gray-400 animate-bounce" />
+                  <p className="text-gray-500 font-medium">무한스크롤</p>
+                </div>
+              </div>
+
+              {filteredPosts.length === 0 && searchQuery && (
+                <div className="text-center py-12">
+                  <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500 mb-2">검색된 아티클이 없습니다.</p>
+                  <p className="text-sm text-gray-400">다른 키워드로 검색해보세요.</p>
+                </div>
+              )}
+            </section>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

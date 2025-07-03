@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, User, Heart, Bookmark, Edit, TrendingUp, Calendar, Mail, Github, ExternalLink, Camera, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -457,7 +458,7 @@ const MyPage = () => {
                 <TabsTrigger value="liked-posts">좋아요 한 글</TabsTrigger>
                 <TabsTrigger value="bookmarked-posts">북마크 한 글</TabsTrigger>
                 <TabsTrigger value="popular-articles">인기 아티클</TabsTrigger>
-                <TabsTrigger value="team-blogs">팀 블로그</TabsTrigger>
+                <TabsTrigger value="team-blogs">인기 블로그</TabsTrigger>
               </TabsList>
             </Tabs>
           </CardHeader>
@@ -583,7 +584,7 @@ const MyPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {popularTeams.map((blog) => (
                     <Link key={blog.id} to={`/team/${blog.id}?view=home`}>
-                      <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer h-96 flex flex-col">
+                      <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer h-[400px] flex flex-col">
                         <div className="aspect-video overflow-hidden">
                           <img 
                             src={blog.image} 

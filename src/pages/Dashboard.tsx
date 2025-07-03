@@ -54,9 +54,15 @@ const Dashboard = () => {
               <h1 className="text-2xl font-bold text-blue-600">TeamLog</h1>
             </div>
             <div className="flex items-center gap-4">
-              <Link to="/explore" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-                탐색하기
-              </Link>
+              <Button 
+                variant="outline" 
+                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 hover:from-blue-600 hover:to-purple-700 font-semibold px-6 py-2 shadow-lg hover:shadow-xl transition-all duration-300"
+                asChild
+              >
+                <Link to="/explore">
+                  ✨ 탐색하기
+                </Link>
+              </Button>
               <Button variant="ghost" size="sm">
                 <Bell className="h-4 w-4" />
               </Button>
@@ -66,7 +72,7 @@ const Dashboard = () => {
                 </Link>
               </Button>
               <Button variant="ghost" size="sm" onClick={logout}>
-                로그아웃
+                👋 로그아웃
               </Button>
             </div>
           </div>
@@ -77,7 +83,7 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">안녕하세요! 👋</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">안녕하세요 민준님! 👋</h2>
           <p className="text-gray-600">오늘도 멋진 프로젝트를 기록해보세요.</p>
         </div>
 
@@ -97,7 +103,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {myBlogs.map((blog) => (
               <Link key={blog.id} to={`/team/${blog.id}?view=home`}>
-                <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer">
+                <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer h-[400px] flex flex-col">
                   <div className="aspect-video overflow-hidden">
                     <img 
                       src={blog.image} 
@@ -105,7 +111,7 @@ const Dashboard = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
-                  <CardHeader>
+                  <CardHeader className="flex-1">
                     <div className="flex items-center justify-between mb-2">
                       <CardTitle className="text-lg">{blog.name}</CardTitle>
                       <ExternalLink className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
