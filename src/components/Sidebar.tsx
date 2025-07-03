@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Book, Users, Calendar, Hash, FileText, Tag } from 'lucide-react';
+import { Book, Users, Calendar, Hash, FileText, Tag, Home } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Link, useParams } from 'react-router-dom';
 
@@ -13,6 +14,7 @@ interface SidebarProps {
 }
 
 const categories = [
+  { id: 'overview', name: '프로젝트 개요', icon: Home, count: 1 },
   { id: 'all', name: '전체 글', icon: Book, count: 32 },
   { id: 'sprint', name: '스프린트 회고', icon: Calendar, count: 8 },
   { id: 'meeting', name: '회의록', icon: FileText, count: 6 },
@@ -75,8 +77,8 @@ const Sidebar = ({
   const { teamId } = useParams();
   
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-16 overflow-y-auto">
-      <div className="p-6">
+    <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-16 overflow-y-auto flex flex-col">
+      <div className="p-6 flex-1">
         {/* Categories */}
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">카테고리</h2>
@@ -151,45 +153,47 @@ const Sidebar = ({
               const isSelected = selectedAuthor === member.name;
               
               return (
-                <div key={member.name} className="relative">
-                  <button
-                    onClick={() => onAuthorChange(isSelected ? '' : member.name)}
-                    className={`w-full flex items-center gap-3 p-2 rounded-lg transition-colors ${
-                      isSelected 
-                        ? 'bg-blue-50 border border-blue-200' 
-                        : 'hover:bg-gray-50'
-                    }`}
-                  >
-                    <Avatar className="w-8 h-8">
-                      {member.avatar ? (
-                        <AvatarImage src={member.avatar} alt={member.name} />
-                      ) : null}
-                      <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white text-sm font-semibold">
-                        {member.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 text-left">
-                      <p className={`text-sm font-medium ${isSelected ? 'text-blue-700' : 'text-gray-900'}`}>
-                        {member.name}
-                      </p>
-                      <p className="text-xs text-gray-500">{member.role}</p>
-                    </div>
-                    <span className={`text-xs ${isSelected ? 'text-blue-600' : 'text-gray-400'}`}>
-                      {member.posts}개
-                    </span>
-                  </button>
-                  
-                  {/* Profile Link Overlay */}
-                  <Link 
-                    to={`/team/${teamId}/member/${encodeURIComponent(member.name)}`}
-                    className="absolute inset-0 z-10"
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                </div>
+                <button
+                  key={member.name}
+                  onClick={() => onAuthorChange(isSelected ? '' : member.name)}
+                  className={`w-full flex items-center gap-3 p-2 rounded-lg transition-colors ${
+                    isSelected 
+                      ? 'bg-blue-50 border border-blue-200' 
+                      : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <Avatar className="w-8 h-8">
+                    {member.avatar ? (
+                      <AvatarImage src={member.avatar} alt={member.name} />
+                    ) : null}
+                    <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white text-sm font-semibold">
+                      {member.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 text-left">
+                    <p className={`text-sm font-medium ${isSelected ? 'text-blue-700' : 'text-gray-900'}`}>
+                      {member.name}
+                    </p>
+                    <p className="text-xs text-gray-500">{member.role}</p>
+                  </div>
+                  <span className={`text-xs ${isSelected ? 'text-blue-600' : 'text-gray-400'}`}>
+                    {member.posts}개
+                  </span>
+                </button>
               );
             })}
           </div>
         </div>
+      </div>
+
+      {/* TeamLog 버튼을 사이드바 하단에 추가 */}
+      <div className="p-6 border-t border-gray-200">
+        <Link 
+          to="/" 
+          className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all duration-300 font-semibold"
+        >
+          <span className="text-lg">TeamLog</span>
+        </Link>
       </div>
     </aside>
   );

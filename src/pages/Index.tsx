@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
@@ -79,24 +80,27 @@ const mockPosts = [
 const Index = () => {
   const { teamId } = useParams();
   const [searchParams] = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('overview');
   const [selectedAuthor, setSelectedAuthor] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const [posts, setPosts] = useState(mockPosts);
-  const [currentView, setCurrentView] = useState<'home' | 'posts'>('posts');
+  const [currentView, setCurrentView] = useState<'home' | 'posts'>('home');
 
   // Check URL query parameter for view
   useEffect(() => {
     const viewParam = searchParams.get('view');
     if (viewParam === 'home') {
       setCurrentView('home');
+      setSelectedCategory('overview');
+    } else {
+      setCurrentView('posts');
     }
   }, [searchParams]);
 
   // Filter posts based on selected category, author, and tag
   const filteredPosts = posts.filter(post => {
-    const categoryMatch = selectedCategory === 'all' || post.category === selectedCategory;
+    const categoryMatch = selectedCategory === 'all' || selectedCategory === 'overview' || post.category === selectedCategory;
     const authorMatch = !selectedAuthor || post.author === selectedAuthor;
     const tagMatch = !selectedTag || (post.tags && post.tags.includes(selectedTag));
     return categoryMatch && authorMatch && tagMatch;
@@ -112,18 +116,22 @@ const Index = () => {
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
-    setCurrentView('posts');
+    if (category === 'overview') {
+      setCurrentView('home');
+    } else {
+      setCurrentView('posts');
+    }
   };
 
   const handleHomeClick = () => {
     setCurrentView('home');
-    setSelectedCategory('all');
+    setSelectedCategory('overview');
     setSelectedAuthor('');
     setSelectedTag('');
   };
 
   const getPageTitle = () => {
-    if (currentView === 'home') return '프로젝트 대문';
+    if (currentView === 'home' || selectedCategory === 'overview') return '프로젝트 대문';
     if (selectedAuthor) return `${selectedAuthor}의 글`;
     if (selectedTag) return `#${selectedTag} 태그`;
     
@@ -156,7 +164,7 @@ const Index = () => {
         />
         
         <main className="flex-1 p-8">
-          {currentView === 'home' ? (
+          {currentView === 'home' || selectedCategory === 'overview' ? (
             <TeamInfo />
           ) : (
             <div>

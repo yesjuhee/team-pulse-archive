@@ -26,13 +26,12 @@ const AppContent = () => {
     <Routes>
       <Route path="/" element={isLoggedIn ? <Dashboard /> : <Landing />} />
       <Route path="/explore" element={<Explore />} />
-      <Route path="/team-blog" element={<Index />} />
-      <Route path="/team/:teamId" element={<Index />} />
-      <Route path="/team/:teamId/member/:memberName" element={<MemberProfile />} />
+      <Route path="/team/smart-city-platform" element={<Index />} />
+      <Route path="/team/smart-city-platform/member/:memberName" element={<MemberProfile />} />
       <Route path="/post/:id" element={<PostDetail />} />
       <Route path="/create-team" element={<CreateTeam />} />
-      <Route path="/team/:teamId/manage" element={<TeamManagement />} />
-      <Route path="/team/:teamId/settings" element={<TeamSettings />} />
+      <Route path="/team/smart-city-platform/manage" element={<TeamManagement />} />
+      <Route path="/team/smart-city-platform/settings" element={<TeamSettings />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

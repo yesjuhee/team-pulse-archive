@@ -16,32 +16,19 @@ const Header = ({ onCreatePost, onHomeClick }: HeaderProps) => {
     <header className="bg-white/90 backdrop-blur-md border-b border-purple-100 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+          {/* Team Name */}
           <div className="flex items-center mx-0 px-0">
-            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent hover:from-purple-700 hover:to-pink-700 transition-all duration-300">
-              TeamLog
-            </Link>
+            <button 
+              onClick={onHomeClick}
+              className="text-2xl font-bold text-gray-800 hover:text-purple-600 transition-colors flex items-center gap-2"
+            >
+              🏙️ <span>스마트 시티 플랫폼</span>
+            </button>
           </div>
 
-          {/* Team Navigation */}
+          {/* Navigation - 팀 블로그에서는 제거 */}
           <nav className="hidden md:flex items-center space-x-8">
-            {teamId === 'smart-city-platform' ? (
-              <button 
-                onClick={onHomeClick}
-                className="text-gray-700 hover:text-purple-600 transition-colors font-medium flex items-center gap-2"
-              >
-                🏙️ <span>스마트 시티 플랫폼</span>
-              </button>
-            ) : (
-              <>
-                <Link to="/team-blog" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
-                  팀 블로그
-                </Link>
-                <Link to="/create-team" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
-                  팀 만들기
-                </Link>
-              </>
-            )}
+            {/* 팀 블로그 내에서는 네비게이션 숨김 */}
           </nav>
 
           {/* Actions */}
