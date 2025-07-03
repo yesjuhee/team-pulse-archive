@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, User, Heart, Bookmark, Edit, TrendingUp, Calendar, Mail, Github, ExternalLink, Camera, Users } from 'lucide-react';
+import { ArrowLeft, User, Heart, Bookmark, Edit, TrendingUp, Calendar, Mail, Github, ExternalLink, Camera, Users, FileText, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -41,9 +41,9 @@ const MyPage = () => {
   };
 
   const myTeams = [
-    { id: '1', name: '스마트 시티 플랫폼', role: 'Frontend Developer', posts: 8, status: 'active' },
-    { id: '2', name: 'E-commerce 프로젝트', role: 'Frontend Developer', posts: 3, status: 'active' },
-    { id: '3', name: '모바일 앱 개발', role: 'React Native Developer', posts: 1, status: 'completed' }
+    { id: 'smart-city-platform', name: '스마트 시티 플랫폼', role: 'Frontend Developer', posts: 8, status: 'active' },
+    { id: 'ecommerce-analytics', name: 'E-commerce 분석 대시보드', role: 'Frontend Developer', posts: 3, status: 'active' },
+    { id: 'health-monitoring', name: '헬스케어 모니터링 앱', role: 'React Native Developer', posts: 1, status: 'completed' }
   ];
 
   // Mock posts data
@@ -116,122 +116,58 @@ const MyPage = () => {
     },
   ];
 
-  // 인기 아티클 데이터
-  const popularArticles = [
+  // Mock draft posts data
+  const draftPosts = [
     {
-      id: '101',
-      title: 'React Query와 Zustand를 활용한 상태 관리 패턴',
-      excerpt: '복잡한 상태 관리 문제를 해결하기 위한 React Query와 Zustand 조합 사용법',
-      author: '김개발',
-      team: '스마트 시티 플랫폼',
-      teamId: 'smart-city-platform',
-      views: 1234,
-      likes: 89,
-      date: '2024.01.20',
-      category: 'Tech Archiving'
-    },
-    {
-      id: '102',
-      title: 'Docker를 이용한 마이크로서비스 아키텍처 구축',
-      excerpt: '컨테이너 기반 마이크로서비스 설계와 배포 자동화 경험 공유',
-      author: '박백엔드',
-      team: 'E-commerce 분석 대시보드',
-      teamId: 'ecommerce-analytics',
-      views: 987,
-      likes: 76,
-      date: '2024.01.18',
-      category: 'Trouble Shooting'
-    },
-    {
-      id: '103',
-      title: 'React Native와 WebRTC를 활용한 실시간 통신',
-      excerpt: '모바일 앱에서 실시간 화상통화 기능 구현 과정과 최적화 방법',
-      author: '이모바일',
-      team: '헬스케어 모니터링 앱',
-      teamId: 'health-monitoring',
-      views: 756,
-      likes: 65,
-      date: '2024.01.22',
-      category: '스프린트 회고'
-    },
-    {
-      id: '104',
-      title: 'GraphQL vs REST API 성능 비교 분석',
-      excerpt: '실제 프로젝트에서 GraphQL과 REST API의 성능을 비교 분석한 결과',
-      author: '이백엔드',
-      team: '핀테크 월렛 서비스',
-      teamId: 'fintech-wallet',
-      views: 892,
-      likes: 67,
+      id: 'draft-1',
+      title: 'React Hook Form 도입 경험 (임시저장)',
+      content: '폼 관리 라이브러리 도입 과정에서의 고민과 결정 사항들을 정리 중...',
+      author: '김민준',
+      category: 'tech',
       date: '2024.01.25',
-      category: 'Tech Archiving'
+      likes: 0,
+      comments: 0,
+      isDraft: true,
     },
     {
-      id: '105',
-      title: 'AI 모델 최적화를 통한 응답 시간 50% 단축',
-      excerpt: 'GPT 모델 파인튜닝과 캐싱 전략으로 챗봇 응답 속도 개선',
-      author: '정AI',
-      team: 'AI 챗봇 플랫폼',
-      teamId: 'ai-chatbot',
-      views: 723,
-      likes: 54,
+      id: 'draft-2',
+      title: '팀 코드 리뷰 프로세스 개선 (임시저장)',
+      content: '효율적인 코드 리뷰 문화를 만들기 위한 시도들...',
+      author: '김민준',
+      category: 'sprint',
       date: '2024.01.23',
-      category: 'Tech Archiving'
-    }
+      likes: 0,
+      comments: 0,
+      isDraft: true,
+    },
   ];
 
-  // 팀 블로그 데이터
-  const popularTeams = [
+  // Mock comments data
+  const myComments = [
     {
-      id: 'smart-city-platform',
-      name: '스마트 시티 플랫폼',
-      description: 'IoT 센서와 AI를 활용한 스마트 시티 관리 플랫폼 개발',
-      members: 5,
-      posts: 23,
-      image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&h=250&fit=crop',
-      tags: ['React', 'Node.js', 'IoT', 'AI'],
-      lastUpdate: '2024.01.20'
+      id: 'comment-1',
+      postTitle: 'AWS Lambda 성능 최적화 경험',
+      postAuthor: '이백엔드',
+      comment: '정말 유용한 정보네요! 저희 팀에서도 Lambda 콜드 스타트 문제로 고민이 많았는데, 워밍업 전략 부분이 특히 도움이 됐습니다.',
+      date: '2024.01.24',
+      likes: 3,
     },
     {
-      id: 'fintech-wallet',
-      name: '핀테크 월렛 서비스',
-      description: '블록체인 기반 디지털 월렛 개발 프로젝트',
-      members: 7,
-      posts: 42,
-      image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=250&fit=crop',
-      tags: ['React', 'Blockchain', 'Web3', 'TypeScript'],
-      lastUpdate: '2024.01.25'
+      id: 'comment-2',
+      postTitle: 'React Native 네비게이션 구조 설계',
+      postAuthor: '박모바일',
+      comment: '네비게이션 스택 구조가 깔끔하네요. 혹시 딥링크 처리는 어떻게 하셨나요?',
+      date: '2024.01.22',
+      likes: 1,
     },
     {
-      id: 'ai-chatbot',
-      name: 'AI 챗봇 플랫폼',
-      description: 'GPT 기반 고객 서비스 챗봇 개발',
-      members: 4,
-      posts: 15,
-      image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=400&h=250&fit=crop',
-      tags: ['Python', 'FastAPI', 'OpenAI', 'Docker'],
-      lastUpdate: '2024.01.23'
+      id: 'comment-3',
+      postTitle: 'GraphQL vs REST API 성능 비교',
+      postAuthor: '정풀스택',
+      comment: '벤치마크 결과가 흥미롭네요. 저희 프로젝트에서도 GraphQL 도입을 고려 중인데 참고하겠습니다.',
+      date: '2024.01.20',
+      likes: 2,
     },
-    {
-      id: 'education-platform',
-      name: '온라인 교육 플랫폼',
-      description: '인터랙티브 온라인 학습 관리 시스템',
-      members: 8,
-      posts: 35,
-      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=250&fit=crop',
-      tags: ['Angular', 'Spring Boot', 'MySQL', 'AWS'],
-      lastUpdate: '2024.01.19'
-    },
-    {
-      id: 'food-delivery',
-      name: '푸드 딜리버리 앱',
-      description: '실시간 음식 배달 주문 및 관리 시스템',
-      members: 5,
-      posts: 22,
-      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=250&fit=crop',
-      tags: ['React Native', 'Express.js', 'MongoDB', 'Socket.io'],
-      lastUpdate: '2024.01.24'
-    }
   ];
 
   const handlePostClick = (post: any) => {
@@ -453,12 +389,12 @@ const MyPage = () => {
           <CardHeader>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-6">
-                <TabsTrigger value="my-teams">내 팀 목록</TabsTrigger>
+                <TabsTrigger value="my-teams">내 팀 블로그 목록</TabsTrigger>
                 <TabsTrigger value="my-posts">내가 쓴 글</TabsTrigger>
                 <TabsTrigger value="liked-posts">좋아요 한 글</TabsTrigger>
                 <TabsTrigger value="bookmarked-posts">북마크 한 글</TabsTrigger>
-                <TabsTrigger value="popular-articles">인기 아티클</TabsTrigger>
-                <TabsTrigger value="team-blogs">인기 블로그</TabsTrigger>
+                <TabsTrigger value="draft-posts">임시 저장글</TabsTrigger>
+                <TabsTrigger value="my-comments">작성한 댓글</TabsTrigger>
               </TabsList>
             </Tabs>
           </CardHeader>
@@ -467,22 +403,14 @@ const MyPage = () => {
               <TabsContent value="my-teams" className="space-y-4">
                 {myTeams.length > 0 ? (
                   myTeams.map((team) => (
-                    <div key={team.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900">{team.name}</h4>
-                        <p className="text-sm text-gray-500">{team.role} • {team.posts}개 글 작성</p>
+                    <Link key={team.id} to={`/team/${team.id}?view=home`}>
+                      <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900">{team.name}</h4>
+                          <p className="text-sm text-gray-500">{team.role} • {team.posts}개 글 작성</p>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant={team.status === 'active' ? 'default' : 'secondary'}>
-                          {team.status === 'active' ? '활동중' : '완료'}
-                        </Badge>
-                        <Button variant="ghost" size="sm" asChild>
-                          <Link to={`/team/${team.id}`}>
-                            <ExternalLink className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                      </div>
-                    </div>
+                    </Link>
                   ))
                 ) : (
                   <div className="text-center py-12">
@@ -549,78 +477,63 @@ const MyPage = () => {
                 )}
               </TabsContent>
 
-              <TabsContent value="popular-articles" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {popularArticles.map((post) => (
-                    <Link key={post.id} to={`/post/${post.id}`}>
-                      <Card className="hover:shadow-lg transition-shadow cursor-pointer h-64 flex flex-col">
-                        <CardHeader className="flex-1">
-                          <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
-                            <div className="flex items-center gap-2">
-                              <Badge variant="secondary">{post.category}</Badge>
-                              <span>{post.team}</span>
-                            </div>
+              <TabsContent value="draft-posts" className="space-y-6">
+                {draftPosts.length > 0 ? (
+                  draftPosts.map((post) => (
+                    <div key={post.id} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">{post.title}</h3>
+                            <Badge variant="secondary" className="text-xs">임시저장</Badge>
+                          </div>
+                          <p className="text-gray-600 mb-3 line-clamp-2">{post.content}</p>
+                          <div className="flex items-center gap-4 text-sm text-gray-500">
                             <span>{post.date}</span>
+                            <span>작성자: {post.author}</span>
                           </div>
-                          <CardTitle className="text-lg line-clamp-2">{post.title}</CardTitle>
-                          <CardDescription className="line-clamp-2">{post.excerpt}</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium text-gray-700">{post.author}</span>
-                            <div className="flex items-center gap-4 text-sm text-gray-500">
-                              <span>👀 {post.views.toLocaleString()}</span>
-                              <span>❤️ {post.likes}</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
+                        </div>
+                        <Button variant="outline" size="sm">
+                          <Edit className="h-4 w-4 mr-2" />
+                          계속 작성
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500">임시 저장된 글이 없습니다.</p>
+                  </div>
+                )}
               </TabsContent>
 
-              <TabsContent value="team-blogs" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {popularTeams.map((blog) => (
-                    <Link key={blog.id} to={`/team/${blog.id}?view=home`}>
-                      <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer h-[400px] flex flex-col">
-                        <div className="aspect-video overflow-hidden">
-                          <img 
-                            src={blog.image} 
-                            alt={blog.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
+              <TabsContent value="my-comments" className="space-y-6">
+                {myComments.length > 0 ? (
+                  myComments.map((comment) => (
+                    <div key={comment.id} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                      <div className="mb-4">
+                        <h4 className="font-medium text-gray-900 mb-1">{comment.postTitle}</h4>
+                        <p className="text-sm text-gray-500">by {comment.postAuthor}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg mb-3">
+                        <p className="text-gray-700">{comment.comment}</p>
+                      </div>
+                      <div className="flex items-center justify-between text-sm text-gray-500">
+                        <span>{comment.date}</span>
+                        <div className="flex items-center gap-2">
+                          <Heart className="h-4 w-4" />
+                          <span>{comment.likes}</span>
                         </div>
-                        <CardHeader className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <CardTitle className="text-xl">{blog.name}</CardTitle>
-                            <ExternalLink className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
-                          </div>
-                          <CardDescription className="text-gray-600 line-clamp-2">
-                            {blog.description}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {blog.tags.map((tag) => (
-                              <Badge key={tag} variant="secondary" className="text-xs">
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
-                          <div className="flex items-center justify-between text-sm text-gray-500">
-                            <div className="flex items-center gap-4">
-                              <span>👥 {blog.members}명</span>
-                              <span>📝 {blog.posts}개 글</span>
-                            </div>
-                            <span>{blog.lastUpdate}</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500">작성한 댓글이 없습니다.</p>
+                  </div>
+                )}
               </TabsContent>
             </Tabs>
           </CardContent>
