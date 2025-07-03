@@ -143,7 +143,7 @@ const Sidebar = ({
         </div>
 
         {/* Team Members */}
-        <div>
+        <div className="mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Users className="h-5 w-5" />
             팀원
@@ -186,8 +186,8 @@ const Sidebar = ({
         </div>
       </div>
 
-      {/* TeamLog 버튼을 사이드바 하단에 추가 */}
-      <div className="p-6 border-t border-gray-200">
+      {/* TeamLog 버튼을 고정 위치에 배치 */}
+      <div className="p-4 border-t border-gray-200 bg-white">
         <Link 
           to="/" 
           className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all duration-300 font-semibold"

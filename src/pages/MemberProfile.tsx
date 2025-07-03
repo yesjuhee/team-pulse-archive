@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, MessageCircle, FileText, ExternalLink, Github, Linkedin } from 'lucide-react';
+import { ArrowLeft, Calendar, MessageCircle, FileText, ExternalLink, Github, Linkedin, Building2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -58,6 +57,22 @@ const memberData = {
         author: '이백엔드',
         content: '프론트엔드 관점에서도 이런 DB 최적화가 사용자 경험에 얼마나 중요한지 다시 한번 느꼈습니다.',
         date: '2024.01.05'
+      }
+    ],
+    otherTeams: [
+      {
+        name: 'E-Commerce 플랫폼',
+        role: 'Frontend Developer',
+        period: '2023.03 - 2023.08',
+        description: '모바일 쇼핑몰 웹앱 개발 프로젝트',
+        emoji: '🛒'
+      },
+      {
+        name: '헬스케어 앱',
+        role: 'React Native Developer',
+        period: '2022.09 - 2023.02',
+        description: '건강 관리 모바일 앱 개발',
+        emoji: '💊'
       }
     ]
   }
@@ -220,6 +235,35 @@ const MemberProfile = () => {
                       <div className="flex items-center gap-2 text-xs text-gray-500">
                         <Calendar className="h-3 w-3" />
                         <span>{comment.date}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Other Teams */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Building2 className="h-5 w-5" />
+                  다른 팀 블로그 탐색
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  {member.otherTeams.map((team, index) => (
+                    <div key={index} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors cursor-pointer">
+                      <div className="flex items-start gap-3">
+                        <div className="text-2xl">{team.emoji}</div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-900 mb-1">{team.name}</h3>
+                          <p className="text-sm text-gray-600 mb-2">{team.description}</p>
+                          <div className="flex items-center gap-4 text-xs text-gray-500">
+                            <span className="bg-gray-100 px-2 py-1 rounded">{team.role}</span>
+                            <span>{team.period}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}
