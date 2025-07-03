@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
-import { ArrowLeft, User, Heart, Bookmark, Edit, TrendingUp, Calendar, Mail, Github, ExternalLink, Camera } from 'lucide-react';
+import { ArrowLeft, User, Heart, Bookmark, Edit, TrendingUp, Calendar, Mail, Github, ExternalLink, Camera, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -14,7 +13,7 @@ import PostCard from '@/components/PostCard';
 
 const MyPage = () => {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState('my-posts');
+  const [activeTab, setActiveTab] = useState('my-teams');
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   // Mock user data
@@ -114,6 +113,124 @@ const MyPage = () => {
       likes: 9,
       comments: 4,
     },
+  ];
+
+  // 인기 아티클 데이터
+  const popularArticles = [
+    {
+      id: '101',
+      title: 'React Query와 Zustand를 활용한 상태 관리 패턴',
+      excerpt: '복잡한 상태 관리 문제를 해결하기 위한 React Query와 Zustand 조합 사용법',
+      author: '김개발',
+      team: '스마트 시티 플랫폼',
+      teamId: 'smart-city-platform',
+      views: 1234,
+      likes: 89,
+      date: '2024.01.20',
+      category: 'Tech Archiving'
+    },
+    {
+      id: '102',
+      title: 'Docker를 이용한 마이크로서비스 아키텍처 구축',
+      excerpt: '컨테이너 기반 마이크로서비스 설계와 배포 자동화 경험 공유',
+      author: '박백엔드',
+      team: 'E-commerce 분석 대시보드',
+      teamId: 'ecommerce-analytics',
+      views: 987,
+      likes: 76,
+      date: '2024.01.18',
+      category: 'Trouble Shooting'
+    },
+    {
+      id: '103',
+      title: 'React Native와 WebRTC를 활용한 실시간 통신',
+      excerpt: '모바일 앱에서 실시간 화상통화 기능 구현 과정과 최적화 방법',
+      author: '이모바일',
+      team: '헬스케어 모니터링 앱',
+      teamId: 'health-monitoring',
+      views: 756,
+      likes: 65,
+      date: '2024.01.22',
+      category: '스프린트 회고'
+    },
+    {
+      id: '104',
+      title: 'GraphQL vs REST API 성능 비교 분석',
+      excerpt: '실제 프로젝트에서 GraphQL과 REST API의 성능을 비교 분석한 결과',
+      author: '이백엔드',
+      team: '핀테크 월렛 서비스',
+      teamId: 'fintech-wallet',
+      views: 892,
+      likes: 67,
+      date: '2024.01.25',
+      category: 'Tech Archiving'
+    },
+    {
+      id: '105',
+      title: 'AI 모델 최적화를 통한 응답 시간 50% 단축',
+      excerpt: 'GPT 모델 파인튜닝과 캐싱 전략으로 챗봇 응답 속도 개선',
+      author: '정AI',
+      team: 'AI 챗봇 플랫폼',
+      teamId: 'ai-chatbot',
+      views: 723,
+      likes: 54,
+      date: '2024.01.23',
+      category: 'Tech Archiving'
+    }
+  ];
+
+  // 팀 블로그 데이터
+  const popularTeams = [
+    {
+      id: 'smart-city-platform',
+      name: '스마트 시티 플랫폼',
+      description: 'IoT 센서와 AI를 활용한 스마트 시티 관리 플랫폼 개발',
+      members: 5,
+      posts: 23,
+      image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&h=250&fit=crop',
+      tags: ['React', 'Node.js', 'IoT', 'AI'],
+      lastUpdate: '2024.01.20'
+    },
+    {
+      id: 'fintech-wallet',
+      name: '핀테크 월렛 서비스',
+      description: '블록체인 기반 디지털 월렛 개발 프로젝트',
+      members: 7,
+      posts: 42,
+      image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=250&fit=crop',
+      tags: ['React', 'Blockchain', 'Web3', 'TypeScript'],
+      lastUpdate: '2024.01.25'
+    },
+    {
+      id: 'ai-chatbot',
+      name: 'AI 챗봇 플랫폼',
+      description: 'GPT 기반 고객 서비스 챗봇 개발',
+      members: 4,
+      posts: 15,
+      image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=400&h=250&fit=crop',
+      tags: ['Python', 'FastAPI', 'OpenAI', 'Docker'],
+      lastUpdate: '2024.01.23'
+    },
+    {
+      id: 'education-platform',
+      name: '온라인 교육 플랫폼',
+      description: '인터랙티브 온라인 학습 관리 시스템',
+      members: 8,
+      posts: 35,
+      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=250&fit=crop',
+      tags: ['Angular', 'Spring Boot', 'MySQL', 'AWS'],
+      lastUpdate: '2024.01.19'
+    },
+    {
+      id: 'food-delivery',
+      name: '푸드 딜리버리 앱',
+      description: '실시간 음식 배달 주문 및 관리 시스템',
+      members: 5,
+      posts: 22,
+      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=250&fit=crop',
+      tags: ['React Native', 'Express.js', 'MongoDB', 'Socket.io'],
+      lastUpdate: '2024.01.24'
+    }
   ];
 
   const handlePostClick = (post: any) => {
@@ -334,11 +451,13 @@ const MyPage = () => {
         <Card>
           <CardHeader>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-6">
                 <TabsTrigger value="my-teams">내 팀 목록</TabsTrigger>
                 <TabsTrigger value="my-posts">내가 쓴 글</TabsTrigger>
                 <TabsTrigger value="liked-posts">좋아요 한 글</TabsTrigger>
                 <TabsTrigger value="bookmarked-posts">북마크 한 글</TabsTrigger>
+                <TabsTrigger value="popular-articles">인기 아티클</TabsTrigger>
+                <TabsTrigger value="team-blogs">팀 블로그</TabsTrigger>
               </TabsList>
             </Tabs>
           </CardHeader>
@@ -427,6 +546,80 @@ const MyPage = () => {
                     <p className="text-gray-500">북마크 한 글이 없습니다.</p>
                   </div>
                 )}
+              </TabsContent>
+
+              <TabsContent value="popular-articles" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {popularArticles.map((post) => (
+                    <Link key={post.id} to={`/post/${post.id}`}>
+                      <Card className="hover:shadow-lg transition-shadow cursor-pointer h-64 flex flex-col">
+                        <CardHeader className="flex-1">
+                          <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="secondary">{post.category}</Badge>
+                              <span>{post.team}</span>
+                            </div>
+                            <span>{post.date}</span>
+                          </div>
+                          <CardTitle className="text-lg line-clamp-2">{post.title}</CardTitle>
+                          <CardDescription className="line-clamp-2">{post.excerpt}</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-gray-700">{post.author}</span>
+                            <div className="flex items-center gap-4 text-sm text-gray-500">
+                              <span>👀 {post.views.toLocaleString()}</span>
+                              <span>❤️ {post.likes}</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="team-blogs" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {popularTeams.map((blog) => (
+                    <Link key={blog.id} to={`/team/${blog.id}?view=home`}>
+                      <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer h-96 flex flex-col">
+                        <div className="aspect-video overflow-hidden">
+                          <img 
+                            src={blog.image} 
+                            alt={blog.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                        <CardHeader className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <CardTitle className="text-xl">{blog.name}</CardTitle>
+                            <ExternalLink className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                          </div>
+                          <CardDescription className="text-gray-600 line-clamp-2">
+                            {blog.description}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            {blog.tags.map((tag) => (
+                              <Badge key={tag} variant="secondary" className="text-xs">
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                          <div className="flex items-center justify-between text-sm text-gray-500">
+                            <div className="flex items-center gap-4">
+                              <span>👥 {blog.members}명</span>
+                              <span>📝 {blog.posts}개 글</span>
+                            </div>
+                            <span>{blog.lastUpdate}</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
               </TabsContent>
             </Tabs>
           </CardContent>

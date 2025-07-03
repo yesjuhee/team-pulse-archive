@@ -1,14 +1,14 @@
-
 import React, { useState } from 'react';
-import { Search, TrendingUp, Users, ExternalLink, ArrowRight } from 'lucide-react';
+import { Search, TrendingUp, Users, ExternalLink, ArrowRight, Bell, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
-// Mock data for team blogs
+// Mock data for team blogs (확장된 데이터)
 const teamBlogs = [
   {
     id: 'smart-city-platform',
@@ -39,10 +39,70 @@ const teamBlogs = [
     image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=250&fit=crop',
     tags: ['React Native', 'Firebase', 'GraphQL', 'MongoDB'],
     lastUpdate: '2024.01.22'
+  },
+  {
+    id: 'fintech-wallet',
+    name: '핀테크 월렛 서비스',
+    description: '블록체인 기반 디지털 월렛 개발 프로젝트',
+    members: 7,
+    posts: 42,
+    image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=250&fit=crop',
+    tags: ['React', 'Blockchain', 'Web3', 'TypeScript'],
+    lastUpdate: '2024.01.25'
+  },
+  {
+    id: 'ai-chatbot',
+    name: 'AI 챗봇 플랫폼',
+    description: 'GPT 기반 고객 서비스 챗봇 개발',
+    members: 4,
+    posts: 15,
+    image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=400&h=250&fit=crop',
+    tags: ['Python', 'FastAPI', 'OpenAI', 'Docker'],
+    lastUpdate: '2024.01.23'
+  },
+  {
+    id: 'social-media-analytics',
+    name: '소셜미디어 분석 도구',
+    description: '소셜미디어 트렌드 분석 및 인사이트 제공 플랫폼',
+    members: 6,
+    posts: 28,
+    image: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=250&fit=crop',
+    tags: ['Vue.js', 'Django', 'Redis', 'Elasticsearch'],
+    lastUpdate: '2024.01.21'
+  },
+  {
+    id: 'education-platform',
+    name: '온라인 교육 플랫폼',
+    description: '인터랙티브 온라인 학습 관리 시스템',
+    members: 8,
+    posts: 35,
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=250&fit=crop',
+    tags: ['Angular', 'Spring Boot', 'MySQL', 'AWS'],
+    lastUpdate: '2024.01.19'
+  },
+  {
+    id: 'food-delivery',
+    name: '푸드 딜리버리 앱',
+    description: '실시간 음식 배달 주문 및 관리 시스템',
+    members: 5,
+    posts: 22,
+    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=250&fit=crop',
+    tags: ['React Native', 'Express.js', 'MongoDB', 'Socket.io'],
+    lastUpdate: '2024.01.24'
+  },
+  {
+    id: 'travel-planner',
+    name: '여행 계획 도우미',
+    description: 'AI 기반 맞춤형 여행 계획 및 추천 서비스',
+    members: 4,
+    posts: 19,
+    image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&h=250&fit=crop',
+    tags: ['React', 'Python', 'TensorFlow', 'Google Maps API'],
+    lastUpdate: '2024.01.22'
   }
 ];
 
-// Mock data for popular posts
+// Mock data for popular posts (확장된 데이터)
 const popularPosts = [
   {
     id: '1',
@@ -79,10 +139,95 @@ const popularPosts = [
     likes: 65,
     date: '2024.01.22',
     category: '스프린트 회고'
+  },
+  {
+    id: '4',
+    title: 'GraphQL vs REST API 성능 비교 분석',
+    excerpt: '실제 프로젝트에서 GraphQL과 REST API의 성능을 비교 분석한 결과',
+    author: '이백엔드',
+    team: '핀테크 월렛 서비스',
+    teamId: 'fintech-wallet',
+    views: 892,
+    likes: 67,
+    date: '2024.01.25',
+    category: 'Tech Archiving'
+  },
+  {
+    id: '5',
+    title: '블록체인 개발 환경 구축기',
+    excerpt: 'Hardhat과 Ganache를 활용한 로컬 블록체인 개발 환경 설정 과정',
+    author: '박블록체인',
+    team: '핀테크 월렛 서비스',
+    teamId: 'fintech-wallet',
+    views: 1456,
+    likes: 112,
+    date: '2024.01.24',
+    category: 'Trouble Shooting'
+  },
+  {
+    id: '6',
+    title: 'AI 모델 최적화를 통한 응답 시간 50% 단축',
+    excerpt: 'GPT 모델 파인튜닝과 캐싱 전략으로 챗봇 응답 속도 개선',
+    author: '정AI',
+    team: 'AI 챗봇 플랫폼',
+    teamId: 'ai-chatbot',
+    views: 723,
+    likes: 54,
+    date: '2024.01.23',
+    category: 'Tech Archiving'
+  },
+  {
+    id: '7',
+    title: '대용량 데이터 처리를 위한 Elasticsearch 활용기',
+    excerpt: 'SNS 데이터 실시간 분석을 위한 Elasticsearch 클러스터 구축 경험',
+    author: '최데이터',
+    team: '소셜미디어 분석 도구',
+    teamId: 'social-media-analytics',
+    views: 634,
+    likes: 43,
+    date: '2024.01.21',
+    category: 'Trouble Shooting'
+  },
+  {
+    id: '8',
+    title: '마이크로서비스 아키텍처 도입 후기',
+    excerpt: '모놀리식에서 마이크로서비스로 전환하며 겪은 시행착오와 해결책',
+    author: '김아키텍트',
+    team: '온라인 교육 플랫폼',
+    teamId: 'education-platform',
+    views: 1087,
+    likes: 78,
+    date: '2024.01.19',
+    category: '스프린트 회고'
+  },
+  {
+    id: '9',
+    title: 'React Native 성능 최적화 실전 가이드',
+    excerpt: '모바일 앱 성능 개선을 위한 최적화 기법과 측정 방법',
+    author: '이모바일',
+    team: '푸드 딜리버리 앱',
+    teamId: 'food-delivery',
+    views: 845,
+    likes: 61,
+    date: '2024.01.24',
+    category: 'Tech Archiving'
+  },
+  {
+    id: '10',
+    title: 'TensorFlow로 추천 시스템 구현하기',
+    excerpt: '딥러닝 기반 여행지 추천 알고리즘 개발 과정과 성능 개선',
+    author: '박ML',
+    team: '여행 계획 도우미',
+    teamId: 'travel-planner',
+    views: 567,
+    likes: 39,
+    date: '2024.01.22',
+    category: 'Tech Archiving'
   }
 ];
 
 const Explore = () => {
+  const { isLoggedIn, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFilter, setSearchFilter] = useState('all');
   const [filteredBlogs, setFilteredBlogs] = useState(teamBlogs);
@@ -174,15 +319,28 @@ const Explore = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Link to="/" className="text-2xl font-bold text-blue-600">TeamLog</Link>
-              <span className="ml-2 text-sm text-gray-500">탐색하기</span>
             </div>
             <div className="flex items-center gap-4">
-              <Button variant="ghost" asChild>
-                <Link to="/mypage">마이페이지</Link>
-              </Button>
-              <Button variant="outline" asChild>
-                <Link to="/create-team">팀 블로그 만들기</Link>
-              </Button>
+              <span className="text-sm text-gray-500">탐색하기</span>
+              {isLoggedIn ? (
+                <>
+                  <Button variant="ghost" size="sm">
+                    <Bell className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/mypage">
+                      <User className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={logout}>
+                    로그아웃
+                  </Button>
+                </>
+              ) : (
+                <Button variant="outline" asChild>
+                  <Link to="/">로그인하기</Link>
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -252,8 +410,8 @@ const Explore = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts.map((post) => (
                 <Link key={post.id} to={`/post/${post.id}`}>
-                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                    <CardHeader>
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer h-64 flex flex-col">
+                    <CardHeader className="flex-1">
                       <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
                         <div className="flex items-center gap-2">
                           <Badge variant="secondary">{post.category}</Badge>
@@ -313,7 +471,7 @@ const Explore = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredBlogs.map((blog) => (
                 <Link key={blog.id} to={`/team/${blog.id}?view=home`}>
-                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer">
+                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer h-96 flex flex-col">
                     <div className="aspect-video overflow-hidden">
                       <img 
                         src={blog.image} 
@@ -321,7 +479,7 @@ const Explore = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
-                    <CardHeader>
+                    <CardHeader className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <CardTitle className="text-xl">{blog.name}</CardTitle>
                         <ExternalLink className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />

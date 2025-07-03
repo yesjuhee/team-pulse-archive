@@ -60,8 +60,13 @@ const Dashboard = () => {
               <Button variant="ghost" size="sm">
                 <Bell className="h-4 w-4" />
               </Button>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/mypage">
+                  <User className="h-4 w-4" />
+                </Link>
+              </Button>
               <Button variant="ghost" size="sm" onClick={logout}>
-                <User className="h-4 w-4" />
+                로그아웃
               </Button>
             </div>
           </div>
