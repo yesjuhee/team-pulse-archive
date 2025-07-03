@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Book, Users, Calendar, Hash, FileText, Tag, Home } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -11,6 +10,7 @@ interface SidebarProps {
   onAuthorChange: (author: string) => void;
   selectedTag?: string;
   onTagChange: (tag: string) => void;
+  onMemberClick: (memberName: string) => void;
 }
 
 const categories = [
@@ -72,7 +72,8 @@ const Sidebar = ({
   selectedAuthor, 
   onAuthorChange,
   selectedTag,
-  onTagChange
+  onTagChange,
+  onMemberClick
 }: SidebarProps) => {
   const { teamId } = useParams();
   
@@ -155,7 +156,7 @@ const Sidebar = ({
               return (
                 <button
                   key={member.name}
-                  onClick={() => onAuthorChange(isSelected ? '' : member.name)}
+                  onClick={() => onMemberClick(member.name)}
                   className={`w-full flex items-center gap-3 p-2 rounded-lg transition-colors ${
                     isSelected 
                       ? 'bg-blue-50 border border-blue-200' 

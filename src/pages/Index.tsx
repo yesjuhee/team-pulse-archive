@@ -1,11 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import PostCard from '../components/PostCard';
 import TeamInfo from '../components/TeamInfo';
-import CreatePostModal from '../components/CreatePostModal';
+import CreatePostInline from '../components/CreatePostInline';
+import MemberProfileInline from '../components/MemberProfileInline';
 
 // Mock posts data with tags and meeting category
 const mockPosts = [
@@ -83,9 +83,9 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState('overview');
   const [selectedAuthor, setSelectedAuthor] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
-  const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const [posts, setPosts] = useState(mockPosts);
-  const [currentView, setCurrentView] = useState<'home' | 'posts'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'posts' | 'member' | 'write'>('home');
+  const [selectedMember, setSelectedMember] = useState<string>('');
 
   // Check URL query parameter for view
   useEffect(() => {
@@ -112,6 +112,7 @@ const Index = () => {
 
   const handleSavePost = (newPost: any) => {
     setPosts(prev => [newPost, ...prev]);
+    setCurrentView('home'); // 글 저장 후 홈으로 돌아가기
   };
 
   const handleCategoryChange = (category: string) => {
@@ -128,10 +129,29 @@ const Index = () => {
     setSelectedCategory('overview');
     setSelectedAuthor('');
     setSelectedTag('');
+    setSelectedMember('');
+  };
+
+  const handleMemberClick = (memberName: string) => {
+    setSelectedMember(memberName);
+    setCurrentView('member');
+    setSelectedCategory('');
+    setSelectedAuthor('');
+    setSelectedTag('');
+  };
+
+  const handleCreatePost = () => {
+    setCurrentView('write');
+    setSelectedCategory('');
+    setSelectedAuthor('');
+    setSelectedTag('');
+    setSelectedMember('');
   };
 
   const getPageTitle = () => {
     if (currentView === 'home' || selectedCategory === 'overview') return '프로젝트 대문';
+    if (currentView === 'member' && selectedMember) return `${selectedMember}의 활동`;
+    if (currentView === 'write') return '새 글 작성';
     if (selectedAuthor) return `${selectedAuthor}의 글`;
     if (selectedTag) return `#${selectedTag} 태그`;
     
@@ -149,7 +169,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
       <Header 
-        onCreatePost={() => setIsCreatePostModalOpen(true)} 
+        onCreatePost={handleCreatePost} 
         onHomeClick={handleHomeClick}
       />
       
@@ -161,11 +181,16 @@ const Index = () => {
           onAuthorChange={setSelectedAuthor}
           selectedTag={selectedTag}
           onTagChange={setSelectedTag}
+          onMemberClick={handleMemberClick}
         />
         
         <main className="flex-1 p-8">
           {currentView === 'home' || selectedCategory === 'overview' ? (
-            <TeamInfo />
+            <TeamInfo onMemberClick={handleMemberClick} />
+          ) : currentView === 'member' && selectedMember ? (
+            <MemberProfileInline memberName={selectedMember} teamId={teamId || 'smart-city-platform'} />
+          ) : currentView === 'write' ? (
+            <CreatePostInline onSave={handleSavePost} onCancel={handleHomeClick} />
           ) : (
             <div>
               <div className="flex items-center justify-between mb-6">
@@ -190,12 +215,6 @@ const Index = () => {
           )}
         </main>
       </div>
-
-      <CreatePostModal 
-        isOpen={isCreatePostModalOpen}
-        onClose={() => setIsCreatePostModalOpen(false)}
-        onSave={handleSavePost}
-      />
     </div>
   );
 };

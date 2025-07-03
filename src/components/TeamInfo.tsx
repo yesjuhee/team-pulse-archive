@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Calendar, MapPin, Users, Github, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -6,6 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Link, useParams } from 'react-router-dom';
+
+interface TeamInfoProps {
+  onMemberClick: (memberName: string) => void;
+}
 
 const teamData = {
   name: '스마트 시티 플랫폼',
@@ -51,7 +54,7 @@ const teamData = {
   }
 };
 
-const TeamInfo = () => {
+const TeamInfo = ({ onMemberClick }: TeamInfoProps) => {
   const { teamId } = useParams();
   
   return (
@@ -104,10 +107,10 @@ const TeamInfo = () => {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">팀원</h3>
           <div className="space-y-4">
             {teamData.members.map((member) => (
-              <Link 
-                key={member.name} 
-                to={`/team/${teamId}/member/${encodeURIComponent(member.name)}`}
-                className="block"
+              <button
+                key={member.name}
+                onClick={() => onMemberClick(member.name)}
+                className="w-full block"
               >
                 <div className="flex gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
                   <Avatar className="w-16 h-16 flex-shrink-0">
@@ -118,7 +121,7 @@ const TeamInfo = () => {
                       {member.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 text-left">
                     <div className="flex items-center gap-2 mb-1">
                       <p className="font-semibold text-gray-900 text-lg">{member.name}</p>
                       <Badge variant="outline" className="text-xs">
@@ -130,7 +133,7 @@ const TeamInfo = () => {
                     </p>
                   </div>
                 </div>
-              </Link>
+              </button>
             ))}
           </div>
         </div>
