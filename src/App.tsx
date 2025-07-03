@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,29 +12,43 @@ import TeamSettings from "./pages/TeamSettings";
 import MyPage from "./pages/MyPage";
 import MemberProfile from "./pages/MemberProfile";
 import NotFound from "./pages/NotFound";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import Dashboard from "./pages/Dashboard";
+import Explore from "./pages/Explore";
 
 const queryClient = new QueryClient();
 
+const AppContent = () => {
+  const { isLoggedIn } = useAuth();
+
+  return (
+    <Routes>
+      <Route path="/" element={isLoggedIn ? <Dashboard /> : <Landing />} />
+      <Route path="/explore" element={<Explore />} />
+      <Route path="/team-blog" element={<Index />} />
+      <Route path="/team/:teamId" element={<Index />} />
+      <Route path="/team/:teamId/member/:memberName" element={<MemberProfile />} />
+      <Route path="/post/:id" element={<PostDetail />} />
+      <Route path="/create-team" element={<CreateTeam />} />
+      <Route path="/team/:teamId/manage" element={<TeamManagement />} />
+      <Route path="/team/:teamId/settings" element={<TeamSettings />} />
+      <Route path="/mypage" element={<MyPage />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/team-blog" element={<Index />} />
-          <Route path="/team/:teamId" element={<Index />} />
-          <Route path="/team/:teamId/member/:memberName" element={<MemberProfile />} />
-          <Route path="/post/:id" element={<PostDetail />} />
-          <Route path="/create-team" element={<CreateTeam />} />
-          <Route path="/team/:teamId/manage" element={<TeamManagement />} />
-          <Route path="/team/:teamId/settings" element={<TeamSettings />} />
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
