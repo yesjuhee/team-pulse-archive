@@ -34,6 +34,7 @@ const AppContent = () => {
       <Route path="/team/smart-city-platform/manage" element={<TeamManagement />} />
       <Route path="/team/smart-city-platform/settings" element={<TeamSettings />} />
       <Route path="/mypage" element={<MyPage />} />
+      <Route path="/team-blog" element={<Index />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

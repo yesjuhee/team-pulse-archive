@@ -38,6 +38,105 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
     suggestedTags: string[];
   } | null>(null);
 
+  // 템플릿 정의
+  const templates = {
+    sprint: `## 무엇을 개발했나요?
+이번 스프린트에서 개발한 주요 기능과 작업 내용을 작성해주세요.
+
+## 제일 어려웠던 문제는 무엇이고, 어떻게 해결했나요?
+개발 과정에서 가장 어려웠던 기술적 문제와 해결 방법을 설명해주세요.
+
+## 해결되지 않은 문제가 있었다면 무엇인가요?
+아직 해결하지 못한 문제나 개선이 필요한 부분을 적어주세요.
+
+## 다음 스프린트에서 집중해야 하는 것은 무엇인가요?
+다음 스프린트의 목표와 우선순위를 정리해주세요.
+
+## 지금의 감정 상태는 어떤가요?
+현재 느끼는 감정이나 팀 분위기에 대해 솔직하게 적어주세요.`,
+
+    meeting: `## 회의 기본 정보
+- **일시**: 
+- **참석자**: 
+- **회의 목적**: 
+
+## 주요 논의 사항
+### 1. 안건 1
+- 논의 내용:
+- 결정 사항:
+
+### 2. 안건 2
+- 논의 내용:
+- 결정 사항:
+
+## 액션 아이템
+- [ ] **담당자**: 할 일 (기한)
+- [ ] **담당자**: 할 일 (기한)
+
+## 다음 회의 일정
+- **일시**: 
+- **주요 안건**: `,
+
+    troubleshooting: `## 문제 상황
+어떤 문제가 발생했는지 구체적으로 설명해주세요.
+
+## 문제 재현 방법
+1. 
+2. 
+3. 
+
+## 시도해본 해결 방법들
+### 방법 1
+- **시도한 것**: 
+- **결과**: 
+
+### 방법 2
+- **시도한 것**: 
+- **결과**: 
+
+## 최종 해결책
+문제를 어떻게 해결했는지 상세히 설명해주세요.
+
+## 배운 점과 예방책
+이 문제를 통해 배운 점과 향후 예방할 수 있는 방법을 정리해주세요.`,
+
+    tech: `## 기술 개요
+어떤 기술을 사용했는지 간단히 소개해주세요.
+
+## 사용 이유
+왜 이 기술을 선택했는지 이유를 설명해주세요.
+
+## 구현 과정
+### 설치 및 설정
+\`\`\`bash
+# 설치 명령어
+\`\`\`
+
+### 주요 코드
+\`\`\`javascript
+// 핵심 코드 예시
+\`\`\`
+
+## 장점과 단점
+### 장점
+- 
+- 
+
+### 단점
+- 
+- 
+
+## 결론
+이 기술을 사용한 경험을 종합해보세요.`
+  };
+
+  // 카테고리 변경 시 템플릿 적용
+  useEffect(() => {
+    if (category && templates[category as keyof typeof templates] && !content.trim()) {
+      setContent(templates[category as keyof typeof templates]);
+    }
+  }, [category]);
+
   // 자동 저장 기능 (목업)
   useEffect(() => {
     if (title.trim() || content.trim()) {
@@ -177,7 +276,7 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
 
             <TabsContent value="direct">
               <div className="text-sm text-gray-600 p-3 bg-gray-50 rounded-lg">
-                마크다운 형식으로 직접 글을 작성할 수 있습니다.
+                카테고리를 선택하면 해당 템플릿이 자동으로 적용됩니다. 마크다운 형식으로 작성할 수 있습니다.
               </div>
             </TabsContent>
           </Tabs>
@@ -241,6 +340,18 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
             </div>
           </div>
 
+          {/* 카테고리 선택시 템플릿 안내 */}
+          {category && activeTab === 'direct' && (
+            <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+              <div className="text-sm text-green-700">
+                ✓ {category === 'sprint' ? '스프린트 회고' : 
+                   category === 'meeting' ? '회의록' : 
+                   category === 'troubleshooting' ? '트러블 슈팅' : 
+                   'Tech Archiving'} 템플릿이 적용되었습니다. 내용을 수정하여 사용하세요.
+              </div>
+            </div>
+          )}
+
           {/* 태그 표시 */}
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
@@ -295,21 +406,7 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
                   <Textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    placeholder="마크다운 형식으로 내용을 작성하세요...
-
-# 제목
-## 부제목
-
-**굵은 글씨** *기울임 글씨*
-
-- 목록 1
-- 목록 2
-
-```javascript
-코드 블럭
-```
-
-> 인용문"
+                    placeholder="마크다운 형식으로 내용을 작성하세요..."
                     className="h-full min-h-[500px] font-mono text-sm resize-none"
                   />
                 </div>
