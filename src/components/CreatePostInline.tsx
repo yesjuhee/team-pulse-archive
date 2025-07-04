@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Save, X, Plus, Eye, Edit3, Link, Sparkles } from 'lucide-react';
+import { Save, X, Plus, Eye, Edit3, Link, Sparkles, Mic, MicOff, Square } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -38,6 +38,11 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
     suggestedTags: string[];
   } | null>(null);
 
+  // 녹음 관련 상태
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+
   // 템플릿 정의
   const templates = {
     sprint: `## 무엇을 개발했나요?
@@ -54,6 +59,21 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
 
 ## 지금의 감정 상태는 어떤가요?
 현재 느끼는 감정이나 팀 분위기에 대해 솔직하게 적어주세요.`,
+
+    daily: `## 오늘 한 일
+오늘 완료한 주요 작업들을 정리해주세요.
+
+## 배운 점
+새롭게 알게 된 것이나 깨달은 점을 적어주세요.
+
+## 어려웠던 점
+오늘 겪었던 어려움이나 문제점을 적어주세요.
+
+## 내일 할 일
+내일 계획하고 있는 작업들을 적어주세요.
+
+## 오늘의 기분
+오늘 하루 기분이나 컨디션을 솔직하게 적어주세요.`,
 
     meeting: `## 회의 기본 정보
 - **일시**: 
@@ -137,6 +157,17 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
     }
   }, [category]);
 
+  // 녹음 타이머
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isRecording) {
+      interval = setInterval(() => {
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isRecording]);
+
   // 자동 저장 기능 (목업)
   useEffect(() => {
     if (title.trim() || content.trim()) {
@@ -158,6 +189,60 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
 
   const handleRemoveTag = (tagToRemove: string) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  const handleStartRecording = () => {
+    setIsRecording(true);
+    setRecordingTime(0);
+    console.log('녹음 시작');
+  };
+
+  const handleStopRecording = async () => {
+    setIsRecording(false);
+    setIsTranscribing(true);
+    
+    // 목업 음성 인식 및 요약 처리 (3초 후)
+    setTimeout(() => {
+      const mockTranscription = `안녕하세요, 오늘 회의를 시작하겠습니다. 첫 번째 안건은 프로젝트 진행 상황 점검입니다. 
+김개발님, 백엔드 API 개발 현황을 말씀해주시겠어요? 
+네, 현재 사용자 인증 API와 게시글 CRUD API를 완료했습니다. 다음 주까지 댓글 기능 API를 완성할 예정입니다.
+좋습니다. 그럼 프론트엔드는 어떤가요? 
+이노랑님이 대답해주세요. 현재 메인 페이지와 로그인 페이지를 완료했고, 게시글 목록 페이지를 작업 중입니다.
+잘 진행되고 있네요. 다음 안건으로 넘어가겠습니다.`;
+
+      const mockSummary = `## 회의 기본 정보
+- **일시**: ${new Date().toLocaleDateString('ko-KR')} ${new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}
+- **참석자**: 김개발, 이노랑, 팀리더
+- **회의 목적**: 프로젝트 진행 상황 점검
+
+## 주요 논의 사항
+### 1. 백엔드 개발 현황
+- **논의 내용**: 사용자 인증 API와 게시글 CRUD API 완료 보고
+- **결정 사항**: 다음 주까지 댓글 기능 API 완성
+
+### 2. 프론트엔드 개발 현황
+- **논의 내용**: 메인 페이지, 로그인 페이지 완료, 게시글 목록 페이지 작업 중
+- **결정 사항**: 계속 진행
+
+## 액션 아이템
+- [ ] **김개발**: 댓글 기능 API 개발 (다음 주)
+- [ ] **이노랑**: 게시글 목록 페이지 완성 (이번 주)
+
+## 다음 회의 일정
+- **일시**: 다음 주 동일 시간
+- **주요 안건**: API 통합 테스트 및 배포 준비`;
+
+      setTitle('팀 회의록 - ' + new Date().toLocaleDateString('ko-KR'));
+      setContent(mockSummary);
+      setTags(['회의록', '프로젝트', '진행상황']);
+      setIsTranscribing(false);
+    }, 3000);
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const handleAIAnalysis = async () => {
@@ -291,6 +376,7 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="sprint">스프린트 회고</SelectItem>
+                  <SelectItem value="daily">데일리 회고</SelectItem>
                   <SelectItem value="meeting">회의록</SelectItem>
                   <SelectItem value="troubleshooting">트러블 슈팅</SelectItem>
                   <SelectItem value="tech">Tech Archiving</SelectItem>
@@ -340,11 +426,72 @@ const CreatePostInline = ({ onSave, onCancel }: CreatePostInlineProps) => {
             </div>
           </div>
 
+          {/* 회의록 녹음 기능 */}
+          {category === 'meeting' && (
+            <Card className="border-purple-200 bg-purple-50">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Mic className="h-5 w-5 text-purple-600" />
+                  AI 회의록 자동 작성
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-purple-700">
+                  회의를 녹음하면 AI가 자동으로 회의록을 작성해드립니다.
+                </p>
+                
+                {!isRecording && !isTranscribing && (
+                  <Button 
+                    onClick={handleStartRecording}
+                    className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
+                  >
+                    <Mic className="h-4 w-4" />
+                    녹음 시작
+                  </Button>
+                )}
+
+                {isRecording && (
+                  <div className="flex items-center gap-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                      <span className="text-red-700 font-medium">녹음 중</span>
+                    </div>
+                    <div className="text-red-600 font-mono">
+                      {formatTime(recordingTime)}
+                    </div>
+                    <Button 
+                      onClick={handleStopRecording}
+                      variant="outline"
+                      size="sm"
+                      className="ml-auto flex items-center gap-2"
+                    >
+                      <Square className="h-4 w-4" />
+                      녹음 완료
+                    </Button>
+                  </div>
+                )}
+
+                {isTranscribing && (
+                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+                      <span className="text-blue-700 font-medium">AI가 회의록을 작성하고 있습니다...</span>
+                    </div>
+                    <p className="text-sm text-blue-600">
+                      음성을 텍스트로 변환하고 내용을 요약하고 있습니다.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           {/* 카테고리 선택시 템플릿 안내 */}
           {category && activeTab === 'direct' && (
             <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
               <div className="text-sm text-green-700">
                 ✓ {category === 'sprint' ? '스프린트 회고' : 
+                   category === 'daily' ? '데일리 회고' :
                    category === 'meeting' ? '회의록' : 
                    category === 'troubleshooting' ? '트러블 슈팅' : 
                    'Tech Archiving'} 템플릿이 적용되었습니다. 내용을 수정하여 사용하세요.
