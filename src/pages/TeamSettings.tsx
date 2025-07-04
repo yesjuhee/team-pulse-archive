@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Save, Plus, X, Palette, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,7 +10,6 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
 const TeamSettings = () => {
-  const { teamId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -81,7 +79,7 @@ const TeamSettings = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Button variant="ghost" asChild>
-              <Link to={`/team/${teamId}/manage`} className="flex items-center gap-2">
+              <Link to="/team/smart-city-platform/manage" className="flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
                 팀 관리로 돌아가기
               </Link>

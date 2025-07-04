@@ -28,6 +28,7 @@ const AppContent = () => {
       <Route path="/explore" element={<Explore />} />
       <Route path="/team/smart-city-platform" element={<Index />} />
       <Route path="/team/smart-city-platform/member/:memberName" element={<MemberProfile />} />
+      <Route path="/team/smart-city-platform/post/:id" element={<PostDetail />} />
       <Route path="/post/:id" element={<PostDetail />} />
       <Route path="/create-team" element={<CreateTeam />} />
       <Route path="/team/smart-city-platform/manage" element={<TeamManagement />} />
